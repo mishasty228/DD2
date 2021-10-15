@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+
 #include "RoomTypes.h"
 #include "TileBase.h"
 #include "TileRoom.generated.h"
@@ -21,8 +21,15 @@ class DD2_API ATileRoom : public AActor
 public:
 
 	FActorSpawnParameters spawnParams = FActorSpawnParameters();
+	
 	UWorld* world = GetWorld();
-
+	
+	const FVector2D upHalfDirs[6] = {FVector2D(-1,-1), FVector2D(-1,0),FVector2D(0,-1),
+		FVector2D(0,1),FVector2D(1,0),FVector2D(1,1)};
+	
+	const FVector2D downHalfDirs[6] = {FVector2D(-1,0), FVector2D(-1,1),FVector2D(0,-1),
+		FVector2D(0,1),FVector2D(1,-1),FVector2D(1,0)};
+	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Spawn")
 	FRotator rotator;
 
@@ -36,10 +43,10 @@ public:
 	int32 currentRow=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="RoomParams")
-	float offsetX = 0.00f;
+	float offsetX = 86.6f;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="RoomParams")
-	float offsetY = 0.00f;
+	float offsetY = 100.0f;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="RoomParams")
 	FVector currentOffset = FVector(0,0,0);
@@ -57,15 +64,25 @@ public:
 	TEnumAsByte<ERoomTypes> RoomType = ERT_Base;
 
 	
-	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<ATileBase> Tile;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileData")
+	TSubclassOf<class ATileBase> TileToSpawn;
 	
 	UFUNCTION(BlueprintCallable)
 	void GenerateRoom(int32 sideSize);
 	
 	UFUNCTION(BlueprintCallable)
 	void GenerateRow(int32 rowLength);
+
+	UFUNCTION(BlueprintCallable)
+	void AllTilesCheckNeighs();
+
+	UFUNCTION(BlueprintCallable)
+	int32 CoordToIndex(int32 r, int32 q);
+
+	UFUNCTION(BlueprintCallable)
+	void SetTileNeighs(ATileBase* Tile);
+	
+	
 	ATileRoom();
 
 protected:

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+
 #include "GameFramework/Actor.h"
 #include "TileMap.generated.h"
 

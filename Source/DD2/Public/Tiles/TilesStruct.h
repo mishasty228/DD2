@@ -17,15 +17,17 @@ struct FTilesStruct
 
 	FORCEINLINE FTilesStruct();
 	
-	explicit FORCEINLINE FTilesStruct(int32 Row, int32 Col,
-		FVector Loc, bool BAvailable, bool BVisited);
+	explicit FORCEINLINE FTilesStruct(FVector Loc, bool BAvailable, bool BVisited);
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int32 RowIndex = 0;
+	int32 r = 0;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int32 ColIndex = 0;
+	int32 q = 0;
 
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 aind = 0;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FVector Location = FVector(0,0,0);
 
@@ -47,11 +49,9 @@ FORCEINLINE FTilesStruct::FTilesStruct()
 {
 	
 }
-FORCEINLINE FTilesStruct::FTilesStruct(const int32 Row,const int32 Col,
+FORCEINLINE FTilesStruct::FTilesStruct(
 		const FVector Loc,const bool BAvailable,const bool BVisited)
 {
-	RowIndex = Row;
-	ColIndex = Col;
 	Location = Loc;
 	Available = BAvailable;
 	Visited = BVisited;
@@ -59,11 +59,11 @@ FORCEINLINE FTilesStruct::FTilesStruct(const int32 Row,const int32 Col,
 
 FORCEINLINE bool FTilesStruct::operator==(const FTilesStruct& A) const
 {
-	return RowIndex==A.RowIndex||ColIndex==A.ColIndex;
+	return r==A.r||q==A.q;
 }
 FORCEINLINE bool FTilesStruct::operator!=(const FTilesStruct& A) const
 {
-	return RowIndex!=A.RowIndex||ColIndex!=A.ColIndex;
+	return r!=A.r||q!=A.q;
 }
 
 FORCEINLINE uint32 GetTypeHash(const FTilesStruct& b)
