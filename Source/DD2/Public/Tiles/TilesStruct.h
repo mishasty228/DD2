@@ -32,13 +32,13 @@ struct FTilesStruct
 	FVector Location = FVector(0,0,0);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool Available = true;
+	mutable bool Available = true;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool Visited = false;
+	mutable bool Visited = false;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TEnumAsByte<ETileType> TileType = ETT_Path;
+	mutable TEnumAsByte<ETileType> TileType = ETT_Path;
 	
 	bool operator==(const FTilesStruct& A) const;
 	bool operator!=(const FTilesStruct& A) const;
