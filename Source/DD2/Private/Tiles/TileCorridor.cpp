@@ -67,6 +67,7 @@ void ATileCorridor::GenerateCorridor(int32 length)
 void ATileCorridor::BeginPlay()
 {
 	Super::BeginPlay();
+	len = corridorMinLength + rand() % (corridorMaxLength-corridorMinLength+1);
 	//GenerateCorridor(corridorMinLength+(rand()%(corridorMaxLength-corridorMinLength+1)));
 }
 

@@ -3,6 +3,8 @@
 #pragma once
 
 #include "TileBase.h"
+//#include "TileRoom.h"
+
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "TileCorridor.generated.h"
@@ -39,11 +41,14 @@ public:
 	FRotator rotator;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="RoomParams")
-	int32 corridorMinLength = 5;
+	int32 corridorMinLength = 1;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="RoomParams")
-	int32 corridorMaxLength = 10;
+	int32 corridorMaxLength = 2;
 
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="RoomParams")
+	int32 len = 0;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileData")
 	TSubclassOf<class ATileBase> TileSpawn;
 	

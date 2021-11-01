@@ -3,6 +3,7 @@
 #pragma once
 
 
+#include "FRoomStruct.h"
 #include "RoomTypes.h"
 #include "TileBase.h"
 #include "TileCorridor.h"
@@ -28,6 +29,9 @@ public:
 	/////////////////////////////////////////
 	//////////////PROPERTIES/////////////////
 	/////////////////////////////////////////
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	FRoomStruct RoomStruct = FRoomStruct();
 	
 	const FVector2D upHalfDirs[6] = {FVector2D(-1,-1), FVector2D(-1,0),FVector2D(0,-1),
 		FVector2D(0,1),FVector2D(1,0),FVector2D(1,1)};
@@ -50,9 +54,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Spawn")
 	FVector spawnLocation;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="RoomParams")
+	int32 sizeMin = 3;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="RoomParams")
+	int32 sizeMax = 5;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="RoomParams")
-	int32 size=3;
+	int32 size=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="RoomParams")
 	int32 currentRow=0;
@@ -86,6 +96,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TSubclassOf<class ATileCorridor> CorridorToSpawn;
+
+	
 	/////////////////////////////////////////
 	//////////////FUNCTIONS//////////////////
 	/////////////////////////////////////////

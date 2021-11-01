@@ -10,6 +10,7 @@ ATileRoom::ATileRoom()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	spawnParams.Owner = this;
+	
 	//currentOffset.X-=offsetX*(size-1);
 	//currentOffset.Y-=offsetY*(size-(size/2));
 	spawnLocation = this->GetActorLocation();
@@ -45,7 +46,7 @@ void ATileRoom::GenerateRow(int32 rowLength)
 		{
 					
 			ATileBase* CurrentTile = GetWorld()->SpawnActor<ATileBase>(TileToSpawn,
-				spawnLocation-FVector(offsetX*(size+1),(offsetY*(size+1)),0), rotator,
+				spawnLocation-FVector(offsetX,(offsetY),0), rotator,
 				FActorSpawnParameters());
 			CurrentTile->TilesStruct.TileType=ETT_Path;
 			CurrentTile->TilesStruct.r=currentRow;
@@ -186,8 +187,7 @@ void ATileRoom::MakeDoorAtRandomCorner(int32 amount)
                     }
                     	Corridor->coordsToSpawn.Add(FVector2D(Tile->GetActorLocation().X+offsetDirs[side].X,
                     		Tile->GetActorLocation().Y+offsetDirs[side].Y));
-                    Corridor->GenerateCorridor(Corridor->corridorMinLength+
-                    	(rand()%(Corridor->corridorMaxLength-Corridor->corridorMinLength+1)));
+                    Corridor->GenerateCorridor(Corridor->len);
 					Corridor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,true));
 				}
 				
@@ -201,11 +201,12 @@ void ATileRoom::MakeDoorAtRandomCorner(int32 amount)
 
 void ATileRoom::BeginPlay()
 {
+	/*size=sizeMin+rand()%(sizeMax-sizeMin+1);
 	doorsAmount=rand()%2+1;
 	spawnLocation = this->GetActorLocation();
 	Super::BeginPlay();
 	GenerateRoom(size);
-    MakeDoorAtRandomCorner(doorsAmount);
+    MakeDoorAtRandomCorner(doorsAmount);*/
 }
 
 // Called every frame
