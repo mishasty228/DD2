@@ -168,7 +168,7 @@ public:
 	void TryCreateCorridor(int32 cornum);
 
 	UFUNCTION(BlueprintCallable)
-	bool GenerateCorridor(int32 cornum, int32 dir, int32 size, FVector2D startpoint);
+	bool GenerateCorridor(int32 size);
 
 	//Tile Functions
 
@@ -183,6 +183,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RoomCorCycle();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishRoomCorners();
 
 	//Room Direction Functions
 
