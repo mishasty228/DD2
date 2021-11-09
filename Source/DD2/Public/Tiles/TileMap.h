@@ -32,21 +32,27 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="MapData")
 	FRandomStream RandStream;
+	
+	UPROPERTY()
+	bool bUp = false;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
-	TArray<ATileBase*> TilesBackup;
-
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
-	TArray<ATileBase*> TilesTemp;
-
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
-	TArray<ATileBase*> TilesTempBackup;	
+	UPROPERTY()
+	bool bRight = false;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
-	TArray<ATileRoom*> TileRooms;
+	TArray<FRoomStruct> TileRooms;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
     TArray<TEnumAsByte<ETileType>> TileTypes;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	TArray<TEnumAsByte<ETileType>> TileTypesBackup;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	TArray<TEnumAsByte<ETileType>> TileTypesTemp;
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	TArray<TEnumAsByte<ETileType>> TileTypesTempBackup;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<int32> PathStartIndexes;
@@ -54,6 +60,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 minRoomSize = 3;
 
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 minRoomSizeDefault = 3;
+	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 maxRoomSize = 5;
 
@@ -64,13 +73,25 @@ public:
 	FVector tileSpawnLocation;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	float offsetX = 86.6f;
+	int32 direction = 0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 sizeTemp = 0;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	float offsetX = 86.6f;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	float offsetY = 100.0f;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	FVector spawnLocation;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	FVector2D prevLocation = FVector2D(1,1);
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	FVector2D nextLocation = FVector2D(0,0);
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Spawn")
 	FRotator rotator;
@@ -101,6 +122,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomAmount=0;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	bool branching=false;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	float branchChance=0.2f;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileData")
 	TSubclassOf<class ATileBase> TileToSpawn;
@@ -109,6 +136,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DunGenMain();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnEveryIndex();
 
 	UFUNCTION(BlueprintCallable)
 	void GenerateAllIndexes();
@@ -126,14 +156,48 @@ public:
 	void WallsAndPathStarts();
 
 	UFUNCTION(BlueprintCallable)
-	bool GenerateRoom();
+	bool GenerateRoom(int32 roomnum, int32 size=0);
 
 	UFUNCTION(BlueprintCallable)
 	bool CheckSpawnDespawn();
 
 	UFUNCTION(BlueprintCallable)
 	int32 RandomOdd(int32 Min, int32 Max);
+
+	UFUNCTION(BlueprintCallable)
+	void TryCreateCorridor(int32 cornum);
+
+	UFUNCTION(BlueprintCallable)
+	bool GenerateCorridor(int32 cornum, int32 dir, int32 size, FVector2D startpoint);
+
+	//Tile Functions
+
+	UFUNCTION(BlueprintCallable)
+	TArray<TEnumAsByte<ETileType>> GetNeighs(int32 index);
+
+	UFUNCTION(BlueprintCallable)
+	FVector2D IndexToCoord(int32 index);
+
+	UFUNCTION(BlueprintCallable)
+	int32 CoordToIndex(FVector2D coord);
+
+	UFUNCTION(BlueprintCallable)
+	void RoomCorCycle();
+
+	//Room Direction Functions
+
+	UFUNCTION()
+	bool IsRoomBUp(int32 ax, int32 bx);
+
+	UFUNCTION()
+	bool IsRoomBRight(int32 ay, int32 by);
+
+	UFUNCTION()
+	bool AreRoomsParallelOnX(int32 ax, int32 aix, int32 bx, int32 bix);
 	
+	UFUNCTION()
+	bool AreRoomsParallelOnY(int32 ay, int32 aiy, int32 by, int32 biy);
+		
 	protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

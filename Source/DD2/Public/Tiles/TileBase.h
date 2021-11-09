@@ -39,6 +39,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Tiles")
 	TArray<ATileBase*> Neighs;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	TArray<TEnumAsByte<ETileType>> TypeNeighs;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Tiles")
 	TArray<ATileBase*> AvailableNeighs;

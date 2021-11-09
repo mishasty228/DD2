@@ -17,5 +17,6 @@ enum ETileType
 	ETT_LastPath UMETA(DisplayName="LastPath"),
 	ETT_Room UMETA(DisplayName="Room"),
 	ETT_PreWallRoom UMETA(DisplayName="PreWallRoom"),
-	ETT_Trap UMETA(DisplayName="Trap")
+	ETT_Trap UMETA(DisplayName="Trap"),
+	ETT_Last UMETA(DisplayName="Last")
 };
