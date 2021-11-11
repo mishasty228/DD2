@@ -344,7 +344,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 	TileTypesTempBackup.Append(TileTypesTemp);
 
 	bool success = true;
-
+	
 	int32 startRoom = roomToSpawn;
 	size = RandomOdd(minRoomSize,maxRoomSize);
 	
@@ -353,6 +353,14 @@ bool ATileMap::GenerateCorridor(int32 size)
 	int32 dir = RandomOdd(0, 5);
 	
 	FVector2D startpoint = IndexToCoord(TileRooms[startRoom].cornerInd[dir]);
+	
+	TArray<int32> walls;
+	for(int32 i = 1; i <= 2; i++)
+	{
+		walls.Add(CoordToIndex(startpoint+NeighsIndexes[(dir+2*i)%6]));
+	}
+
+	//for(int32 j = 0; j<=1; j++) walls[j] = CoordToIndex(IndexToCoord(walls[j])+NeighsIndexes[dir]);
 	
 	int32 curIndex = CoordToIndex(startpoint);
 	int32 length = RandomOdd(minRoomSize,maxRoomSize);
@@ -363,6 +371,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 	for (int32 i = 1; i <= length+size*2+1; i++)
 	{
 		curIndex = CoordToIndex(startpoint+NeighsIndexes[dir]*i);
+		for(int32 j = 0; j<=1; j++) walls[j] = CoordToIndex(IndexToCoord(walls[j])+NeighsIndexes[dir]);
 		if(TileTypesTempBackup[curIndex]!=ETT_None)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Corridor failed to generate because of collision at index %d"),
@@ -370,7 +379,11 @@ bool ATileMap::GenerateCorridor(int32 size)
 			success = false;
 			break;
 		}
-		else if (i<=length) TileTypesTemp[curIndex]=ETT_Path;
+		else if (i<=length)
+		{
+			TileTypesTemp[curIndex]=ETT_Path;
+		}
+		if (i<=length+1) for(int32 idWall : walls) TileTypesTemp[idWall]=ETT_Wall;
 	}
 	//curIndex = CoordToIndex(startpoint+NeighsIndexes[dir]*length+size*2-1);
 	if(!success)
