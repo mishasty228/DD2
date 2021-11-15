@@ -17,10 +17,18 @@ ATileMap::ATileMap()
 void ATileMap::DunGenMain()
 {
 	RandStreamGen();
+	minRoomSizeDefault = minRoomSize;
+	prevLocation = FVector2D(worldSize/2);
+	GenerateAllIndexes();
+	TempArraysSetup();
+	RoomCorCycle();
+	FinishRoomCorners();
+	SpawnEveryIndex();
+	/*RandStreamGen();
 	GenerateAllIndexes();
 	AllRoomsSetup();
 	//WallsAndPathStarts();
-	SpawnEveryIndex();
+	SpawnEveryIndex();*/
 }
 
 void ATileMap::SpawnEveryIndex()
@@ -147,6 +155,8 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 
 	bool success = true;
 
+	bool spawned = false;
+	
 	TArray <int32> cornersTemp;
 
 	if (size==0) size = RandomOdd(minRoomSize,maxRoomSize);
@@ -158,9 +168,9 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 	int32 end = startY+size;
 
 	UE_LOG(LogTemp, Display, TEXT("ROOM is %d"), roomToSpawn);
-	UE_LOG(LogTemp, Display, TEXT("SideSize is %d"), size);
-	UE_LOG(LogTemp, Display, TEXT("StartX is %d"), startX);
-	UE_LOG(LogTemp, Display, TEXT("StartY is %d"), startY);
+	//UE_LOG(LogTemp, Display, TEXT("SideSize is %d"), size);
+	//UE_LOG(LogTemp, Display, TEXT("StartX is %d"), startX);
+	//UE_LOG(LogTemp, Display, TEXT("StartY is %d"), startY);
 	
 	nextLocation = FVector2D(startX,startY);
 	
@@ -184,8 +194,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 			tileIndex = worldSize*i+j;
 			if (TileTypesTempBackup[tileIndex]!=ETT_None/*&&TileTypesTempBackup[tileIndex]!=ETT_Wall*/)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Room failed to generate because of collision at index %d"),
-		tileIndex);
+				//UE_LOG(LogTemp, Warning, TEXT("Room failed to generate because of collision at index %d"),tileIndex);
 				success=false;
 				//UE_LOG(LogTemp, Display, TEXT("Index %d is colliding"), tileIndex);
 				break;
@@ -195,12 +204,37 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 				TileTypesTemp[tileIndex]=ETT_Wall;
 				//UE_LOG(LogTemp, Display, TEXT("Index %d is Wall"), tileIndex);
 			}
-			else if((j>start||j<end-1)||(i>startX||i<startX+size*2-2))
+			else if((j>start&&j<end-1)||(i>startX&&i<startX+size*2-2))
 			{
 				TileTypesTemp[tileIndex]=ETT_Room;
 				//UE_LOG(LogTemp, Display, TEXT("Index %d is Room"), tileIndex);
 			}
-
+			if (roomnum<roomAmount-despawnAmount&&RandStream.GetFraction()<0.5)
+			{
+				if((j>start+1&&j<end-2)&&(i>startX+1&&i<startX+size*2-3))
+                	{
+						if (RandStream.GetFraction()<0.5&&!spawned&&spawnCount<spawnAmount)
+						{
+							TileTypesTemp[tileIndex]=ETT_Spawn;
+							spawned = true;
+							UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
+						}
+                		
+                	}
+			}
+			else if (roomnum>=roomAmount-despawnAmount)
+			{
+				if((j==end-size)&&(i==startX+size-1))
+				{
+					if (RandStream.GetFraction()<0.9&&!spawned&&despawnCount<despawnAmount)
+					{
+						TileTypesTemp[tileIndex]=ETT_Portal;
+						spawned = true;
+						UE_LOG(LogTemp, Warning, TEXT("Despawner placed at  %d, %d"), i-startX, j-start);
+					}
+				}
+			}
+			
 			//CornersOfRoomSetup
 			/*if ((i==startX||i==startX+size*2-2||i==startX+size)&&(j==start||j==end-1))
 			{
@@ -221,8 +255,13 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("Room %d is good"),roomToSpawn);
+		//UE_LOG(LogTemp, Display, TEXT("Room %d is good"),roomToSpawn);
 		if (size==minRoomSizeDefault) minRoomSize++;
+		if (spawned)
+		{
+			if (roomnum<roomAmount-despawnAmount) spawnCount++;
+			else despawnCount++;
+		}
 		/*TileTypesTempBackup.Empty();
 		TileTypesTempBackup.Append(TileTypesTemp);
 		TileTypesBackup.Empty();
@@ -242,6 +281,11 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 bool ATileMap::CheckSpawnDespawn()
 {
 	bool allSet = true;
+	UE_LOG(LogTemp, Warning, TEXT("Spawns places: %d, despawns placed %d"), spawnCount, despawnCount);
+	if (spawnCount>=spawnAmount&&despawnCount>=despawnAmount) allSet=true;
+	else allSet=false;
+	spawnCount=0;
+	despawnCount=0;
 	return allSet;
 }
 
@@ -348,7 +392,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 	int32 startRoom = roomToSpawn;
 	size = RandomOdd(minRoomSize,maxRoomSize);
 	
-	if (branching && RandStream.GetFraction()<branchChance) startRoom = RandomOdd(0,roomToSpawn);
+	if (branching && RandStream.GetFraction()<branchChance && roomToSpawn<roomAmount-2) startRoom = RandomOdd(0,roomToSpawn);
 	
 	int32 dir = RandomOdd(0, 5);
 	
@@ -363,9 +407,8 @@ bool ATileMap::GenerateCorridor(int32 size)
 	//for(int32 j = 0; j<=1; j++) walls[j] = CoordToIndex(IndexToCoord(walls[j])+NeighsIndexes[dir]);
 	
 	int32 curIndex = CoordToIndex(startpoint);
-	int32 length = RandomOdd(minRoomSize,maxRoomSize);
-	UE_LOG(LogTemp, Display, TEXT("I want to make corridor from room %d to direction %d of length %d and make new room of size %d"),
-		startRoom, dir, length, size);
+	int32 length = RandomOdd(minRoomSize/2,maxRoomSize-1);
+	//UE_LOG(LogTemp, Display, TEXT("I want to make corridor from room %d to direction %d of length %d and make new room of size %d"),startRoom, dir, length, size);
 	sizeTemp = size;
 	TileTypesTemp[curIndex]=ETT_Door;	
 	for (int32 i = 1; i <= length+size*2+1; i++)
@@ -374,8 +417,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 		for(int32 j = 0; j<=1; j++) walls[j] = CoordToIndex(IndexToCoord(walls[j])+NeighsIndexes[dir]);
 		if(TileTypesTempBackup[curIndex]!=ETT_None)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Corridor failed to generate because of collision at index %d"),
-		curIndex);
+			//UE_LOG(LogTemp, Warning, TEXT("Corridor failed to generate because of collision at index %d"),curIndex);
 			success = false;
 			break;
 		}
@@ -393,14 +435,13 @@ bool ATileMap::GenerateCorridor(int32 size)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Display, TEXT("Corridor is good"));
+		//UE_LOG(LogTemp, Display, TEXT("Corridor is good"));
 		
 		prevLocation = startpoint+(length+size)*NeighsIndexes[dir]+(size-1)*NeighsIndexes[0];
-		UE_LOG(LogTemp, Display, TEXT("Room is sized %d, and placed at %f %f"), size, prevLocation.X, prevLocation.Y);
+		//UE_LOG(LogTemp, Display, TEXT("Room is sized %d, and placed at %f %f"), size, prevLocation.X, prevLocation.Y);
 	}
 	return success;
 }
-
 
 TArray<TEnumAsByte<ETileType>> ATileMap::GetNeighs(int32 index)
 {
@@ -426,60 +467,68 @@ int32 ATileMap::CoordToIndex(FVector2D coord)
 void ATileMap::RoomCorCycle()
 {
 	bool tempgood=true;
-	for (; roomToSpawn<roomAmount;)
+	for (int32 i = 0; i< triesToPlaceARoom;i++)
 	{
-		for (int32 j = 0; j<triesToPlaceARoom;j++)
-		{
-
-			tempgood=GenerateRoom(roomToSpawn,sizeTemp);
-			if (tempgood) break;
-		}
-		if (tempgood)
-		{
-			TileTypesTempBackup.Empty();
-			TileTypesTempBackup.Append(TileTypesTemp);
-			TileTypesBackup.Empty();
-			TileTypesBackup.Append(TileTypesTempBackup);
-		}
-		else
-		{
-			TileTypesTemp.Empty();
-			TileTypesTemp.Append(TileTypesTempBackup);
-			break;
-		}
-		for (int32 j = 0; j<triesToPlaceARoom;j++)
-		{
-			if (roomToSpawn<roomAmount-1)
-			{
-				tempgood=GenerateCorridor(RandomOdd(minRoomSize, maxRoomSize));
-			}
-			if (tempgood) break;
-		}
-		/*if (roomToSpawn<roomAmount-1)
+		spawnCount = 0;
+		despawnCount = 0;
+		for (; roomToSpawn<roomAmount;)
 		{
 			for (int32 j = 0; j<triesToPlaceARoom;j++)
 			{
-				tempgood=GenerateCorridor(RandomOdd(minRoomSize, maxRoomSize));
+        
+				tempgood=GenerateRoom(roomToSpawn,sizeTemp);
 				if (tempgood) break;
 			}
-		}*/
-		if (tempgood)
-		{
-			TileTypesTempBackup.Empty();
-            TileTypesTempBackup.Append(TileTypesTemp);
-            TileTypesBackup.Empty();
-            TileTypesBackup.Append(TileTypesTempBackup);
+			if (tempgood)
+			{
+				TileTypesTempBackup.Empty();
+				TileTypesTempBackup.Append(TileTypesTemp);
+				TileTypesBackup.Empty();
+				TileTypesBackup.Append(TileTypesTempBackup);
+			}
+			else
+			{
+				TileTypesTemp.Empty();
+				TileTypesTemp.Append(TileTypesTempBackup);
+				break;
+			}
+			for (int32 j = 0; j<triesToPlaceARoom;j++)
+			{
+				if (roomToSpawn<roomAmount-1)
+				{
+					tempgood=GenerateCorridor(RandomOdd(minRoomSize, maxRoomSize));
+				}
+				if (tempgood) break;
+			}
+			/*if (roomToSpawn<roomAmount-1)
+			{
+				for (int32 j = 0; j<triesToPlaceARoom;j++)
+				{
+					tempgood=GenerateCorridor(RandomOdd(minRoomSize, maxRoomSize));
+					if (tempgood) break;
+				}
+			}*/
+			if (tempgood)
+			{
+				TileTypesTempBackup.Empty();
+				TileTypesTempBackup.Append(TileTypesTemp);
+				TileTypesBackup.Empty();
+				TileTypesBackup.Append(TileTypesTempBackup);
+			}
+			else
+			{
+				TileTypesTemp.Empty();
+				TileTypesTemp.Append(TileTypesTempBackup);
+				break;
+			}
+			roomToSpawn++;
 		}
-		else
+		if(CheckSpawnDespawn())
 		{
-			TileTypesTemp.Empty();
-			TileTypesTemp.Append(TileTypesTempBackup);
+			TileTypes = TileTypesBackup;
 			break;
 		}
-		roomToSpawn++;
 	}
-	if(!CheckSpawnDespawn()) AllRoomsSetup();
-	else TileTypes = TileTypesBackup;
 }
 
 void ATileMap::FinishRoomCorners()
@@ -518,24 +567,12 @@ bool ATileMap::AreRoomsParallelOnY(int32 ay, int32 aiy, int32 by, int32 biy)
 void ATileMap::BeginPlay()
 {
 	Super::BeginPlay();
-	RandStreamGen();
-	minRoomSizeDefault = minRoomSize;
-	prevLocation = FVector2D(worldSize/2);
-	//DunGenMain();
-	GenerateAllIndexes();
-	TempArraysSetup();
-	RoomCorCycle();
-	FinishRoomCorners();
-	SpawnEveryIndex();
-	/*GenerateRoom(roomToSpawn);
-	TileTypes = TileTypesBackup;*/
-	
+	DunGenMain();
 }
 
 // Called every frame
 void ATileMap::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

@@ -118,6 +118,18 @@ public:
 	int32 skip=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 spawnAmount = 4;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 spawnCount = 4;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 despawnAmount = 1;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 despawnCount = 1;
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomToSpawn=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
