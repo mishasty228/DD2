@@ -141,8 +141,14 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	float branchChance=0.2f;
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileData")
-	TSubclassOf<class ATileBase> TileToSpawn;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileBase;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileSpawner;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileDespawner;
 
 	//Functions
 
@@ -176,9 +182,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 RandomOdd(int32 Min, int32 Max);
 
-	UFUNCTION(BlueprintCallable)
-	void TryCreateCorridor(int32 cornum);
-
+	
 	UFUNCTION(BlueprintCallable)
 	bool GenerateCorridor(int32 size);
 

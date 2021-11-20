@@ -4,11 +4,13 @@
 
 
 #include "TilesStruct.h"
-#include "Char/CharBase.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/Actor.h"
 #include "TileBase.generated.h"
+
+class ACharBase;
+struct FCharDataStruct;
 
 UCLASS()
 class DD2_API ATileBase : public AActor

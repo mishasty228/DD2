@@ -3,8 +3,13 @@
 #pragma once
 
 
+#include "CharDataComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "CharBase.generated.h"
+
+class ATileBase;
 
 UCLASS()
 class DD2_API ACharBase : public ACharacter
@@ -14,6 +19,19 @@ class DD2_API ACharBase : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ACharBase();
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
+	USceneComponent* Scene;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
+	USpringArmComponent* SpringArm;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
+	UCameraComponent* Camera;
+
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UCharDataComponent* CharDataComponent;
 
 protected:
 	// Called when the game starts or when spawned

@@ -3,3 +3,11 @@
 
 #include "DD2GameModeBase.h"
 
+
+ADD2GameModeBase::ADD2GameModeBase()
+{
+	PlayerControllerClass = ADD2PlayerController::StaticClass();
+	DefaultPawnClass = AGameMaster::StaticClass();
+}
+
+

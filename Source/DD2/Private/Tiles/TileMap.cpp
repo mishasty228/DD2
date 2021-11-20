@@ -39,11 +39,111 @@ void ATileMap::SpawnEveryIndex()
 		for (int32 j = 0; j < worldSize; j++)
 		{
 			posY = j;
-			if(TileToSpawn&& (TileTypes[i*worldSize+j]!=ETT_None && TileTypes[i*worldSize+j]!=ETT_Last))
+			switch (TileTypes[i*worldSize+j])
+			{
+			case ETT_Room:
+				if(TileBase)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Path:
+				if(TileBase)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Door:
+				if(TileBase)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Wall:
+				if(TileBase)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Spawn:
+				if(TileSpawner)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileSpawner,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Portal:
+				if(TileBase)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+				default:break;
+			}
+			/*if(TileBase&& (TileTypes[i*worldSize+j]!=ETT_None && TileTypes[i*worldSize+j]!=ETT_Last))
 			{
 				spawnLocation = this->GetActorLocation();
 				spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
-				ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileToSpawn,
+				ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 				spawnLocation, rotator,	FActorSpawnParameters());
 				CurTile->TilesStruct.r=i;
 				CurTile->TilesStruct.q=j;
@@ -52,7 +152,7 @@ void ATileMap::SpawnEveryIndex()
 				Tiles.Add(CurTile);
 				CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 				true));
-			}
+			}*/
 		}
 	}
 }
@@ -65,7 +165,7 @@ void ATileMap::GenerateAllIndexes()
 		for (int32 j = 0; j < worldSize; j++)
 		{
 			posY = j;
-			if(TileToSpawn)
+			if(TileBase)
 			{
 				/*spawnLocation = this->GetActorLocation();
 				spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
@@ -141,10 +241,14 @@ void ATileMap::WallsAndPathStarts()
 	
 }
 
-////////////////////////////////////////////////////
-////////////////////GENERATES ROOM//////////////////
-////////////////////////////////////////////////////
 
+
+/**
+ * @brief Generates room at certain location
+ * @param roomnum Current number of rooms generated
+ * @param size Size of one side of a room, so length or width of a room will be 2size-1
+ * @return true if not collided with any other room
+ */
 bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 {
 	
@@ -212,15 +316,14 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 			if (roomnum<roomAmount-despawnAmount&&RandStream.GetFraction()<0.5)
 			{
 				if((j>start+1&&j<end-2)&&(i>startX+1&&i<startX+size*2-3))
-                	{
-						if (RandStream.GetFraction()<0.5&&!spawned&&spawnCount<spawnAmount)
-						{
-							TileTypesTemp[tileIndex]=ETT_Spawn;
-							spawned = true;
-							UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
-						}
-                		
-                	}
+                {
+					if (RandStream.GetFraction()<0.5&&!spawned&&spawnCount<spawnAmount)
+					{
+						TileTypesTemp[tileIndex]=ETT_Spawn;
+						spawned = true;
+						UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
+					}
+                }
 			}
 			else if (roomnum>=roomAmount-despawnAmount)
 			{
@@ -276,108 +379,6 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 		
 	}
 	return success;
-}
-
-bool ATileMap::CheckSpawnDespawn()
-{
-	bool allSet = true;
-	UE_LOG(LogTemp, Warning, TEXT("Spawns places: %d, despawns placed %d"), spawnCount, despawnCount);
-	if (spawnCount>=spawnAmount&&despawnCount>=despawnAmount) allSet=true;
-	else allSet=false;
-	spawnCount=0;
-	despawnCount=0;
-	return allSet;
-}
-
-int32 ATileMap::RandomOdd(int32 Min, int32 Max)
-{
-	int32 result = RandStream.FRandRange(Min,Max);
-	//if (result%2==0) result++;
-	return result;
-}
-
-void ATileMap::TryCreateCorridor(int32 cornum)
-{
-	int32 roomStart=0;
-	int32 roomEnd=0;
-
-	int32 AX =0;
-	int32 AY =0;
-	int32 AiX =0;
-	int32 AiY =0;
-	
-	int32 BX =0;
-	int32 BiX =0;
-	int32 BY =0;
-	int32 BiY =0;
-	
-	UE_LOG(LogTemp, Display, TEXT("I am %d corridor"),	cornum )
-	bool done = false;
-	if (branching)
-	{
-		if (TileRooms.Num()>1 && RandStream.FRand()<branchChance)
-		{
-			roomEnd=TileRooms.Num()-1;
-			roomStart = RandStream.RandRange(0,TileRooms.Num()-2);
-			UE_LOG(LogTemp, Display, TEXT("I want to branch and make corridor between %d and %d room"),	roomStart, roomEnd );
-			done = true;
-		}
-	}
-	if (!done)
-	{
-		if (TileRooms.Num()>1)
-		{
-			roomEnd=TileRooms.Num()-1;
-			roomStart = roomEnd-1;
-			UE_LOG(LogTemp, Display, TEXT("I want to make corridor between %d and %d room"),roomStart, roomEnd );
-		}
-	}
-
-	AX = TileRooms[roomStart].start.X;
-	AY = TileRooms[roomStart].start.Y;
-	AiX = TileRooms[roomStart].start.X+TileRooms[roomStart].size*2-1;
-	AiY = TileRooms[roomStart].start.Y+TileRooms[roomStart].size*2-1;
-
-	BX = TileRooms[roomEnd].start.X;
-	BY = TileRooms[roomEnd].start.Y;
-	BiX = TileRooms[roomEnd].start.X+TileRooms[roomEnd].size*2-1;
-	BiY = TileRooms[roomEnd].start.Y+TileRooms[roomEnd].size*2-1;
-
-	if (AreRoomsParallelOnX(AX,AiX,BX,BiX))
-	{
-		if(IsRoomBUp(AX,BX))
-		{
-			UE_LOG(LogTemp, Display, TEXT("Room %d is lower than room %d"),roomStart, roomEnd );
-			direction = 2;
-		}
-		else UE_LOG(LogTemp, Display, TEXT("Room %d is upper than room %d"),roomStart, roomEnd );
-		direction = 4;
-	}
-	else if (AreRoomsParallelOnY(AY,AiY,BY,BiY))
-	{
-		if(IsRoomBRight(AY,BY))
-		{
-			UE_LOG(LogTemp, Display, TEXT("Room %d is right to room %d"),roomStart, roomEnd );
-			direction = 2;
-		}
-		else UE_LOG(LogTemp, Display, TEXT("Room %d is left to room %d"),roomStart, roomEnd );
-		direction = 5;
-	}
-	else if (IsRoomBUp(AX,BX)&&IsRoomBRight(AY,BY))
-	{
-		UE_LOG(LogTemp, Display, TEXT("Room %d is DOWN-RIGHT to room %d"),roomStart, roomEnd );
-		direction = 3;
-	}
-	else if (!IsRoomBUp(AX,BX)&&!IsRoomBRight(AY,BY))
-	{
-		UE_LOG(LogTemp, Display, TEXT("Room %d is UP-LEFT to room %d"),roomStart, roomEnd );
-		direction = 0;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Rooms %d and %d are not parallel"),roomStart, roomEnd );
-		if (cornum>1) TryCreateCorridor(cornum);
-	}
 }
 
 bool ATileMap::GenerateCorridor(int32 size)
@@ -441,6 +442,24 @@ bool ATileMap::GenerateCorridor(int32 size)
 		//UE_LOG(LogTemp, Display, TEXT("Room is sized %d, and placed at %f %f"), size, prevLocation.X, prevLocation.Y);
 	}
 	return success;
+}
+
+int32 ATileMap::RandomOdd(int32 Min, int32 Max)
+{
+	int32 result = RandStream.FRandRange(Min,Max);
+	//if (result%2==0) result++;
+	return result;
+}
+
+bool ATileMap::CheckSpawnDespawn()
+{
+	bool allSet = true;
+	UE_LOG(LogTemp, Warning, TEXT("Spawns places: %d, despawns placed %d"), spawnCount, despawnCount);
+	if (spawnCount>=spawnAmount&&despawnCount>=despawnAmount) allSet=true;
+	else allSet=false;
+	spawnCount=0;
+	despawnCount=0;
+	return allSet;
 }
 
 TArray<TEnumAsByte<ETileType>> ATileMap::GetNeighs(int32 index)
