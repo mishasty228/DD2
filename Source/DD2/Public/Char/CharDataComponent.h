@@ -18,6 +18,9 @@ public:
 	// Sets default values for this component's properties
 	UCharDataComponent();
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FString> Names = {"Debchik", "Dodik", "Kretin", "Loshped", "Gremlinus", "Durachok", "Baranid", "Kurdyuck"};
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
 	FCharDataStruct CharData;
 

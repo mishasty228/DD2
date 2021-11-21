@@ -16,8 +16,11 @@ struct FCharDataStruct
 
  FORCEINLINE FCharDataStruct();
 
- explicit FORCEINLINE FCharDataStruct(int32 hp, int32 mp, int32 ap, int32 str, int32 spd, int32 def, int32 ar);
+ explicit FORCEINLINE FCharDataStruct(FString name, int32 hp, int32 mp, int32 ap, int32 str, int32 spd, int32 def, int32 ar);
 
+ UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
+ FString Name = "None";
+ 
  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
  int32 HP = 20;
 
@@ -51,8 +54,9 @@ inline FCharDataStruct::FCharDataStruct()
 {
 }
 
-inline FCharDataStruct::FCharDataStruct(int32 hp, int32 mp, int32 ap, int32 str, int32 spd, int32 def, int32 ar)
+inline FCharDataStruct::FCharDataStruct(FString name, int32 hp, int32 mp, int32 ap, int32 str, int32 spd, int32 def, int32 ar)
 {
+ Name = name;
  HP = hp;
  MP = mp;
  AP = ap;

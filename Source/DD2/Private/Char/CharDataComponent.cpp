@@ -38,13 +38,13 @@ void UCharDataComponent::GenerateRandomParametersForType(TEnumAsByte<ECharType> 
 	switch (type)
 	{
 	case ECT_Wizard :
-		CharData = FCharDataStruct(FRandomStream().RandRange(18,22), FRandomStream().RandRange(8,12),
+		CharData = FCharDataStruct(Names[FRandomStream().RandRange(0,Names.Num()-1)] ,FRandomStream().RandRange(18,22), FRandomStream().RandRange(8,12),
 			FRandomStream().RandRange(4,6),FRandomStream().RandRange(5,7),
 			FRandomStream().RandRange(5,25),FRandomStream().RandRange(4,6),
 			1);
 		break;
 	default:
-		CharData = FCharDataStruct(FRandomStream().RandRange(18,22), FRandomStream().RandRange(8,12),
+		CharData = FCharDataStruct(Names[FRandomStream().RandRange(0,Names.Num()-1)] ,FRandomStream().RandRange(18,22), FRandomStream().RandRange(8,12),
 			FRandomStream().RandRange(4,6),FRandomStream().RandRange(5,7),
 			FRandomStream().RandRange(5,25),FRandomStream().RandRange(4,6),
 			1);

@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Char/CharBase.h"
 #include "GameFramework/PlayerController.h"
 #include "DD2PlayerController.generated.h"
 
+class ACharBase;
+class AGameMaster;
 /**
  * 
  */
@@ -18,7 +19,23 @@ class DD2_API ADD2PlayerController : public APlayerController
 public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TArray<ACharBase*> Characters;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	TArray<ACharBase*> CharactersForTurn;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	ACharBase* CurrentCharacter;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	AGameMaster* GameMaster;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetNextChar();
+
+	UFUNCTION(BlueprintCallable)
+	void SumHeroesUp();
+
+	UFUNCTION(BlueprintCallable)
+	void SortChars();
 };
