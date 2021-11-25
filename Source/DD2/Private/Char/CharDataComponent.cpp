@@ -19,7 +19,7 @@ UCharDataComponent::UCharDataComponent()
 void UCharDataComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	RandomStream.GenerateNewSeed();
 	// ...
 	
 }
@@ -38,15 +38,15 @@ void UCharDataComponent::GenerateRandomParametersForType(TEnumAsByte<ECharType> 
 	switch (type)
 	{
 	case ECT_Wizard :
-		CharData = FCharDataStruct(Names[FRandomStream().RandRange(0,Names.Num()-1)] ,FRandomStream().RandRange(18,22), FRandomStream().RandRange(8,12),
-			FRandomStream().RandRange(4,6),FRandomStream().RandRange(5,7),
-			FRandomStream().RandRange(5,25),FRandomStream().RandRange(4,6),
+		CharData = FCharDataStruct(Names[RandomStream.RandRange(0,Names.Num()-1)] ,RandomStream.RandRange(18,22), RandomStream.RandRange(8,12),
+			RandomStream.RandRange(4,6),RandomStream.RandRange(5,7),
+			RandomStream.RandRange(5,25),RandomStream.RandRange(4,6),
 			1);
 		break;
 	default:
-		CharData = FCharDataStruct(Names[FRandomStream().RandRange(0,Names.Num()-1)] ,FRandomStream().RandRange(18,22), FRandomStream().RandRange(8,12),
-			FRandomStream().RandRange(4,6),FRandomStream().RandRange(5,7),
-			FRandomStream().RandRange(5,25),FRandomStream().RandRange(4,6),
+		CharData = FCharDataStruct(Names[RandomStream.RandRange(0,Names.Num()-1)] ,RandomStream.RandRange(18,22), RandomStream.RandRange(8,12),
+			RandomStream.RandRange(4,6),RandomStream.RandRange(5,7),
+			RandomStream.RandRange(5,15),RandomStream.RandRange(4,6),
 			1);
 		break;
 	}

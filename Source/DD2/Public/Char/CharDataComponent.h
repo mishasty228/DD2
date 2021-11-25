@@ -27,6 +27,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
 	TEnumAsByte<ECharType> CharType = ECT_Knight;
 
+	FRandomStream RandomStream;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

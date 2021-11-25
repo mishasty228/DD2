@@ -159,6 +159,7 @@ void ATileMap::SpawnEveryIndex()
 
 void ATileMap::GenerateAllIndexes()
 {
+	TileTypes.Empty();
 	for (int32 i = 0; i < worldSize; i++)
 	{
 		posX = i;
@@ -296,7 +297,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 		for(int32 j = start; j < end; j++)
 		{
 			tileIndex = worldSize*i+j;
-			if (TileTypesTempBackup[tileIndex]!=ETT_None/*&&TileTypesTempBackup[tileIndex]!=ETT_Wall*/)
+			if (TileTypesTempBackup[tileIndex]!=ETT_None&&TileTypesTempBackup[tileIndex]!=ETT_Wall)
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("Room failed to generate because of collision at index %d"),tileIndex);
 				success=false;
@@ -317,7 +318,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 			{
 				if((j>start+1&&j<end-2)&&(i>startX+1&&i<startX+size*2-3))
                 {
-					if (RandStream.GetFraction()<0.5&&!spawned&&spawnCount<spawnAmount)
+					if (RandStream.GetFraction()<0.2&&!spawned&&spawnCount<spawnAmount)
 					{
 						TileTypesTemp[tileIndex]=ETT_Spawn;
 						spawned = true;
@@ -490,11 +491,14 @@ void ATileMap::RoomCorCycle()
 	{
 		spawnCount = 0;
 		despawnCount = 0;
+		roomToSpawn = 0;
+		TileTypesTemp.Empty();
+		TileRooms.Empty();
+		TileTypesTemp.Append(TileTypesTempBackup);
 		for (; roomToSpawn<roomAmount;)
 		{
 			for (int32 j = 0; j<triesToPlaceARoom;j++)
 			{
-        
 				tempgood=GenerateRoom(roomToSpawn,sizeTemp);
 				if (tempgood) break;
 			}
@@ -547,6 +551,15 @@ void ATileMap::RoomCorCycle()
 			TileTypes = TileTypesBackup;
 			break;
 		}
+		else
+		{
+			seed = 0;
+			TempArraysSetup();
+			RandStreamGen();
+			UE_LOG(LogTemp,Error, TEXT("Trying to generate another map with seed %d"), seed);
+			//GenerateAllIndexes();
+		}
+		
 	}
 }
 
@@ -556,8 +569,8 @@ void ATileMap::FinishRoomCorners()
 	{
 		for (int32 i = 0; i < Room.cornerInd.Num();i++)
 		{
-			int32 ind_to_check=CoordToIndex(IndexToCoord(Room.cornerInd[i])+NeighsIndexes[i]);
-			if (TileTypes[ind_to_check]==ETT_Path) TileTypes[Room.cornerInd[i]]=ETT_Door;
+			int32 Ind_To_Check=CoordToIndex(IndexToCoord(Room.cornerInd[i])+NeighsIndexes[i]);
+			if (TileTypes[Ind_To_Check]==ETT_Path) TileTypes[Room.cornerInd[i]]=ETT_Door;
 		}
 	}
 }

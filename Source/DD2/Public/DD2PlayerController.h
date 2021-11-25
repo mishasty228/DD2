@@ -29,6 +29,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	AGameMaster* GameMaster;
 
+protected:
+	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetNextChar();
