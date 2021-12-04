@@ -182,6 +182,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 RandomOdd(int32 Min, int32 Max);
 
+	UFUNCTION(BlueprintCallable)
+	void FindOptionalCorridors();
 	
 	UFUNCTION(BlueprintCallable)
 	bool GenerateCorridor(int32 size);

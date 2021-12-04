@@ -23,6 +23,7 @@ void ATileMap::DunGenMain()
 	TempArraysSetup();
 	RoomCorCycle();
 	FinishRoomCorners();
+	FindOptionalCorridors();
 	SpawnEveryIndex();
 	/*RandStreamGen();
 	GenerateAllIndexes();
@@ -30,6 +31,8 @@ void ATileMap::DunGenMain()
 	//WallsAndPathStarts();
 	SpawnEveryIndex();*/
 }
+
+//Indexes spawning
 
 void ATileMap::SpawnEveryIndex()
 {
@@ -157,6 +160,8 @@ void ATileMap::SpawnEveryIndex()
 	}
 }
 
+//Indexes setup 
+
 void ATileMap::GenerateAllIndexes()
 {
 	TileTypes.Empty();
@@ -277,7 +282,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 	//UE_LOG(LogTemp, Display, TEXT("StartX is %d"), startX);
 	//UE_LOG(LogTemp, Display, TEXT("StartY is %d"), startY);
 	
-	nextLocation = FVector2D(startX,startY);
+	
 	
 	if (roomnum==0)
 	{
@@ -286,6 +291,9 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 		start=prevLocation.Y-size;
 		end=prevLocation.Y;
 	}
+
+	nextLocation = FVector2D(startX,startY);
+	
 	//CornersOfRoomSetup
 	for (FVector2D dir : NeighsIndexes)
 	{
@@ -314,6 +322,13 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 				TileTypesTemp[tileIndex]=ETT_Room;
 				//UE_LOG(LogTemp, Display, TEXT("Index %d is Room"), tileIndex);
 			}
+
+			//////////////////////
+			//////////////////////
+			///Spawner & Despawner set
+			//////////////////////
+			//////////////////////
+			
 			if (roomnum<roomAmount-despawnAmount&&RandStream.GetFraction()<0.5)
 			{
 				if((j>start+1&&j<end-2)&&(i>startX+1&&i<startX+size*2-3))
@@ -322,7 +337,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 					{
 						TileTypesTemp[tileIndex]=ETT_Spawn;
 						spawned = true;
-						UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
+						//UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
 					}
                 }
 			}
@@ -334,7 +349,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size)
 					{
 						TileTypesTemp[tileIndex]=ETT_Portal;
 						spawned = true;
-						UE_LOG(LogTemp, Warning, TEXT("Despawner placed at  %d, %d"), i-startX, j-start);
+						//UE_LOG(LogTemp, Warning, TEXT("Despawner placed at  %d, %d"), i-startX, j-start);
 					}
 				}
 			}
@@ -438,7 +453,6 @@ bool ATileMap::GenerateCorridor(int32 size)
 	else
 	{
 		//UE_LOG(LogTemp, Display, TEXT("Corridor is good"));
-		
 		prevLocation = startpoint+(length+size)*NeighsIndexes[dir]+(size-1)*NeighsIndexes[0];
 		//UE_LOG(LogTemp, Display, TEXT("Room is sized %d, and placed at %f %f"), size, prevLocation.X, prevLocation.Y);
 	}
@@ -450,6 +464,94 @@ int32 ATileMap::RandomOdd(int32 Min, int32 Max)
 	int32 result = RandStream.FRandRange(Min,Max);
 	//if (result%2==0) result++;
 	return result;
+}
+
+void ATileMap::FindOptionalCorridors()
+{
+	TempArraysSetup();
+	for (int32 i = 0; i < TileRooms.Num()-1; i++)
+	{
+		FRoomStruct A = TileRooms[i];
+		for (int32 j = i+1; j < TileRooms.Num(); j++)
+		{
+			UE_LOG(LogTemp, Display, TEXT("Rooms %i and %i"), i, j);
+			
+			FRoomStruct B = TileRooms[j];
+
+			FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
+			UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
+			//Directions 0 and 3 WORKS CORRECTLY
+			if ((A.start+(A.size-1)).Y == (B.start+(B.size-1)).Y)
+			{
+				int32 len = res.Size();
+				UE_LOG(LogTemp, Display, TEXT("YDistance between rooms %i and %i is %i"), i, j , len);
+				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
+				//if (len<maxRoomSize*3)
+				//{
+				if (res.X < 0 && TileTypes[A.cornerInd[1]]!=ETT_Door)
+				{
+					UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 1"), i, j);
+					TileTypes[A.cornerInd[1]]= ETT_Door;
+					TileTypes[B.cornerInd[4]]= ETT_Door;
+				}
+				if (res.X > 0 && TileTypes[A.cornerInd[4]]!=ETT_Door)
+				{
+					UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 4"), i, j);
+					TileTypes[A.cornerInd[4]]= ETT_Door;
+					TileTypes[B.cornerInd[1]]= ETT_Door;
+				}
+				//}
+			}
+			
+			//Directions 2 and 5
+			else if ((A.start+(A.size-1)).X == (B.start+(B.size-1)).X)
+			{
+				//FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
+				int32 len = res.Size();
+				UE_LOG(LogTemp, Display, TEXT("XDistance between rooms %i and %i is %i"), i, j , len);
+				
+				//if (len<maxRoomSize*3)
+				//{
+				if (res.Y > 0 && TileTypes[A.cornerInd[2]]!=ETT_Door)
+				{
+					UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 2"), i, j);
+					TileTypes[A.cornerInd[2]]= ETT_Door;
+					TileTypes[B.cornerInd[5]]= ETT_Door;
+				}
+				if (res.Y < 0 && TileTypes[A.cornerInd[5]]!=ETT_Door)
+				{
+					UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 5"), i, j);
+					TileTypes[A.cornerInd[5]]= ETT_Door;
+					TileTypes[B.cornerInd[2]]= ETT_Door;
+				}
+				//}
+			}
+			//Directions 1 and 4
+			else if (((A.start+(A.size-1)).X - (A.start+(A.size-1)).Y== (B.start+(B.size-1)).X - (B.start+(B.size-1)).Y))
+			{
+				//FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
+				int32 len = res.Size();
+				UE_LOG(LogTemp, Display, TEXT("XYDistance between rooms %i and %i is %i "), i, j , len);
+				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
+				
+				//if (len<maxRoomSize*3)
+				//{
+				if (res < FVector2D().ZeroVector && TileTypes[A.cornerInd[0]]!=ETT_Door)
+				{
+					UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 0"), i, j);
+					TileTypes[A.cornerInd[0]]= ETT_Door;
+					TileTypes[B.cornerInd[3]]= ETT_Door;
+				}
+				if (res > FVector2D().ZeroVector && TileTypes[A.cornerInd[3]]!=ETT_Door)
+				{
+					UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 3"), i, j);
+					TileTypes[A.cornerInd[3]]= ETT_Door;
+					TileTypes[B.cornerInd[0]]= ETT_Door;
+				}
+				//}
+			}
+		}
+	}
 }
 
 bool ATileMap::CheckSpawnDespawn()
@@ -497,6 +599,11 @@ void ATileMap::RoomCorCycle()
 		TileTypesTemp.Append(TileTypesTempBackup);
 		for (; roomToSpawn<roomAmount;)
 		{
+			/////////////////////////
+			/////////////////////////
+			//Room Generation
+			/////////////////////////
+			/////////////////////////
 			for (int32 j = 0; j<triesToPlaceARoom;j++)
 			{
 				tempgood=GenerateRoom(roomToSpawn,sizeTemp);
@@ -515,6 +622,11 @@ void ATileMap::RoomCorCycle()
 				TileTypesTemp.Append(TileTypesTempBackup);
 				break;
 			}
+			//////////////////////
+			//////////////////////
+			//Corridor Generation
+			//////////////////////
+			//////////////////////
 			for (int32 j = 0; j<triesToPlaceARoom;j++)
 			{
 				if (roomToSpawn<roomAmount-1)
@@ -523,14 +635,6 @@ void ATileMap::RoomCorCycle()
 				}
 				if (tempgood) break;
 			}
-			/*if (roomToSpawn<roomAmount-1)
-			{
-				for (int32 j = 0; j<triesToPlaceARoom;j++)
-				{
-					tempgood=GenerateCorridor(RandomOdd(minRoomSize, maxRoomSize));
-					if (tempgood) break;
-				}
-			}*/
 			if (tempgood)
 			{
 				TileTypesTempBackup.Empty();
@@ -544,6 +648,7 @@ void ATileMap::RoomCorCycle()
 				TileTypesTemp.Append(TileTypesTempBackup);
 				break;
 			}
+			//Good? Next room generation
 			roomToSpawn++;
 		}
 		if(CheckSpawnDespawn())
