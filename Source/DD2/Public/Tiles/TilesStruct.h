@@ -26,6 +26,9 @@ struct FTilesStruct
 	int32 q = 0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 s = 0;
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 aind = 0;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -59,7 +62,7 @@ FORCEINLINE FTilesStruct::FTilesStruct(
 
 FORCEINLINE bool FTilesStruct::operator==(const FTilesStruct& A) const
 {
-	return r==A.r||q==A.q;
+	return r==A.r&&q==A.q;
 }
 FORCEINLINE bool FTilesStruct::operator!=(const FTilesStruct& A) const
 {

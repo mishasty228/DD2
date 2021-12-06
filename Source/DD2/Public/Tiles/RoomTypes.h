@@ -11,6 +11,7 @@ UENUM(BlueprintType)
 enum ERoomTypes
 {
  ERT_Base UMETA(DisplayName="BasicRoom"),
- ERT_ChestRoom UMETA(DisplayName="RoomWithChest")
+ ERT_ChestRoom UMETA(DisplayName="RoomWithChest"),
+ ERT_PortalRoom UMETA(DisplayName="RoomWithPortal")
 };
 

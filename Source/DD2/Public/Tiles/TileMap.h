@@ -167,11 +167,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RandStreamGen();
 
-	UFUNCTION(BlueprintCallable)
-	void AllRoomsSetup();
 
-	UFUNCTION(BlueprintCallable)
-	void WallsAndPathStarts();
 
 	UFUNCTION(BlueprintCallable)
 	bool GenerateRoom(int32 roomnum, int32 size=0);
@@ -205,19 +201,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FinishRoomCorners();
 
-	//Room Direction Functions
-
-	UFUNCTION()
-	bool IsRoomBUp(int32 ax, int32 bx);
-
-	UFUNCTION()
-	bool IsRoomBRight(int32 ay, int32 by);
-
-	UFUNCTION()
-	bool AreRoomsParallelOnX(int32 ax, int32 aix, int32 bx, int32 bix);
-	
-	UFUNCTION()
-	bool AreRoomsParallelOnY(int32 ay, int32 aiy, int32 by, int32 biy);
+	UFUNCTION(BlueprintCallable)
+	void DoOptionalCorridors(int32 start, int32 end, int32 dir);
 		
 	protected:
 	// Called when the game starts or when spawned
