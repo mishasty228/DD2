@@ -141,6 +141,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	float branchChance=0.2f;
 	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	float optionalChance=0.2f;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
 	TSubclassOf<class ATileBase> TileBase;
 

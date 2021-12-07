@@ -374,7 +374,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 	//for(int32 j = 0; j<=1; j++) walls[j] = CoordToIndex(IndexToCoord(walls[j])+NeighsIndexes[dir]);
 	
 	int32 curIndex = CoordToIndex(startpoint);
-	int32 length = RandomOdd(minRoomSize/2,maxRoomSize-1);
+	const int32 length = maxRoomSize*2-TileRooms[startRoom].size-size;
 	//UE_LOG(LogTemp, Display, TEXT("I want to make corridor from room %d to direction %d of length %d and make new room of size %d"),startRoom, dir, length, size);
 	sizeTemp = size;
 	TileTypesTemp[curIndex]=ETT_Door;	
@@ -452,14 +452,14 @@ void ATileMap::FindOptionalCorridors()
 				
 				//if (len<maxRoomSize*3)
 				//{
-				if (res < FVector2D().ZeroVector && TileTypes[A.cornerInd[0]]!=ETT_Door)
+				if (res < FVector2D().ZeroVector && TileTypes[A.cornerInd[0]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[0],B.cornerInd[3],0);
 					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 0"), i, j);
 					TileTypes[A.cornerInd[0]]= ETT_Door;
 					TileTypes[B.cornerInd[3]]= ETT_Door;*/
 				}
-				if (res > FVector2D().ZeroVector && TileTypes[A.cornerInd[3]]!=ETT_Door)
+				if (res > FVector2D().ZeroVector && TileTypes[A.cornerInd[3]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[3],B.cornerInd[0],3);
 					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 3"), i, j);
@@ -478,14 +478,14 @@ void ATileMap::FindOptionalCorridors()
 				
 				//if (len<maxRoomSize*3)
 				//{
-				if (res.Y > 0 && TileTypes[A.cornerInd[2]]!=ETT_Door)
+				if (res.Y > 0 && TileTypes[A.cornerInd[2]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[2],B.cornerInd[5],2);
 					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 2"), i, j);
 					TileTypes[A.cornerInd[2]]= ETT_Door;
 					TileTypes[B.cornerInd[5]]= ETT_Door;*/
 				}
-				if (res.Y < 0 && TileTypes[A.cornerInd[5]]!=ETT_Door)
+				if (res.Y < 0 && TileTypes[A.cornerInd[5]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[5],B.cornerInd[2],5);
 					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 5"), i, j);
@@ -503,14 +503,14 @@ void ATileMap::FindOptionalCorridors()
 				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
 				//if (len<maxRoomSize*3)
 				//{
-				if (res.X < 0 && TileTypes[A.cornerInd[1]]!=ETT_Door)
+				if (res.X < 0 && TileTypes[A.cornerInd[1]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[1],B.cornerInd[4],1);
 					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 1"), i, j);
 					TileTypes[A.cornerInd[1]]= ETT_Door;
 					TileTypes[B.cornerInd[4]]= ETT_Door;*/
 				}
-				if (res.X > 0 && TileTypes[A.cornerInd[4]]!=ETT_Door)
+				if (res.X > 0 && TileTypes[A.cornerInd[4]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[4],B.cornerInd[1],4);
 					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 4"), i, j);
