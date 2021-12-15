@@ -1,5 +1,5 @@
 /MANIFEST:EMBED
-/MANIFESTINPUT:F:\EpicGamesGames\UE_4.27\Engine\Build\Windows\Resources\Default-Win64.manifest
+/MANIFESTINPUT:"C:\Program Files\Epic Games\UE_4.27\Engine\Build\Windows\Resources\Default-Win64.manifest"
 /NOLOGO
 /DEBUG
 /errorReport:prompt
@@ -18,10 +18,10 @@
 /ignore:4099
 /DELAYLOAD:"d3d12.dll"
 /DELAYLOAD:"DBGHELP.DLL"
-/LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\lib\x64"
+/LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\VC\Tools\MSVC\14.29.30133\lib\x64"
 /LIBPATH:"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\lib\um\x64"
-/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\ucrt\x64"
-/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\um\x64"
+/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.19041.0\ucrt\x64"
+/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.19041.0\um\x64"
 /NODEFAULTLIB:"LIBCMT"
 /NODEFAULTLIB:"LIBCPMT"
 /NODEFAULTLIB:"LIBCMTD"
@@ -33,17 +33,17 @@
 /NODEFAULTLIB:"LIBCD"
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\RiderGameControlExtension.cpp.obj"
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\Default.rc2.res"
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RD\UE4Editor-RD-0004.lib"
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\UE4Editor-RiderLink-0004.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\HeadMountedDisplay\UE4Editor-HeadMountedDisplay.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\LevelEditor\UE4Editor-LevelEditor.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\UE4Editor-UnrealEd.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Slate\UE4Editor-Slate.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoreUObject\UE4Editor-CoreUObject.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\UE4Editor-Engine.lib"
-"F:\EpicGamesGames\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\RiderGameControlExtension.cpp.obj"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\Default.rc2.res"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RD\UE4Editor-RD-0004.lib"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLink\UE4Editor-RiderLink-0004.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\HeadMountedDisplay\UE4Editor-HeadMountedDisplay.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\LevelEditor\UE4Editor-LevelEditor.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\UE4Editor-UnrealEd.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Slate\UE4Editor-Slate.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoreUObject\UE4Editor-CoreUObject.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\UE4Editor-Engine.lib"
+"C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
 "delayimp.lib"
 "wininet.lib"
 "rpcrt4.lib"
@@ -68,7 +68,7 @@
 "setupapi.lib"
 "dwmapi.lib"
 "imm32.lib"
-/OUT:"F:\Diplom\DD2\Plugins\Developer\RiderLink\Binaries\Win64\UE4Editor-RiderGameControlExtension-0004.dll"
-/IMPLIB:"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\UE4Editor-RiderGameControlExtension-0004.suppressed.lib"
-/PDB:"F:\Diplom\DD2\Plugins\Developer\RiderLink\Binaries\Win64\UE4Editor-RiderGameControlExtension-0004.pdb"
+/OUT:"F:\MyGit\DD2\Plugins\Developer\RiderLink\Binaries\Win64\UE4Editor-RiderGameControlExtension-0004.dll"
+/IMPLIB:"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\UE4Editor-RiderGameControlExtension-0004.suppressed.lib"
+/PDB:"F:\MyGit\DD2\Plugins\Developer\RiderLink\Binaries\Win64\UE4Editor-RiderGameControlExtension-0004.pdb"
 /ignore:4078

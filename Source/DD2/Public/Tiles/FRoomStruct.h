@@ -13,8 +13,12 @@ struct FRoomStruct
 
 	FORCEINLINE FRoomStruct();
 
+	FORCEINLINE FRoomStruct(TEnumAsByte<ERoomTypes> Type);
+	
+	FORCEINLINE FRoomStruct(TEnumAsByte<ERoomTypes> Type, int32 Size, FVector2D Start);
+
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	TArray<ATileBase*> TilesArray;
+	TArray<int32> WayTilesArray;
 
 	/*UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TArray<TEnumAsByte<ETileType>> TileTypes;*/
@@ -30,9 +34,51 @@ struct FRoomStruct
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	FVector2D start = FVector2D(0);
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 Enemies = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bGoFurther = true;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bLocked = false;
+
+	void CheckType(TEnumAsByte<ERoomTypes> TypeRoom);
 };
 
 inline FRoomStruct::FRoomStruct()
 {
 	
+}
+
+inline FRoomStruct::FRoomStruct(TEnumAsByte<ERoomTypes> Type)
+{
+	CheckType(Type);
+}
+
+inline FRoomStruct::FRoomStruct(TEnumAsByte<ERoomTypes> Type, int32 Size, FVector2D Start)
+{
+	CheckType(Type);
+	size = Size;
+	start = Start;
+}
+
+inline void FRoomStruct::CheckType(TEnumAsByte<ERoomTypes> TypeRoom)
+{
+	RoomType = TypeRoom;
+	if (TypeRoom == ERT_ChestRoom)
+	{
+		Enemies = 0;
+		bLocked = true;
+		bGoFurther = false;
+	}
+	else if (TypeRoom == ERT_KeyRoom)
+	{
+		Enemies = FRandomStream().RandRange(5,6);
+	}
+	else if (TypeRoom == ERT_EnemyRoom)
+	{
+		Enemies = FRandomStream().RandRange(4,5);
+	}
 }

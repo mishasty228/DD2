@@ -6,6 +6,6 @@
 /NAME:"UE4Editor-RiderBlueprintExtension-0014.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderBlueprintExtension\Module.RiderBlueprintExtension.cpp.obj"
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderBlueprintExtension\Default.rc2.res"
-/OUT:"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderBlueprintExtension\UE4Editor-RiderBlueprintExtension-0014.lib"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderBlueprintExtension\Module.RiderBlueprintExtension.cpp.obj"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderBlueprintExtension\Default.rc2.res"
+/OUT:"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderBlueprintExtension\UE4Editor-RiderBlueprintExtension-0014.lib"

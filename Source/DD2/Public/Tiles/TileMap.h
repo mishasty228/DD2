@@ -3,6 +3,7 @@
 #pragma once
 
 
+#include "MapTypes.h"
 #include "TileBase.h"
 #include "TileRoom.h"
 #include "GameFramework/Actor.h"
@@ -30,14 +31,14 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<ATileBase*> Tiles;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="MapData")
 	FRandomStream RandStream;
 	
-	UPROPERTY()
-	bool bUp = false;
+	//UPROPERTY()
+	//bool bUp = false;
 
-	UPROPERTY()
-	bool bRight = false;
+	//UPROPERTY()
+	//bool bRight = false;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<FRoomStruct> TileRooms;
@@ -45,22 +46,22 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
     TArray<TEnumAsByte<ETileType>> TileTypes;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<TEnumAsByte<ETileType>> TileTypesBackup;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<TEnumAsByte<ETileType>> TileTypesTemp;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<TEnumAsByte<ETileType>> TileTypesTempBackup;
-	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
-	TArray<int32> PathStartIndexes;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	TEnumAsByte<EMapTypes> MapType = EMT_Base;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 minRoomSize = 3;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 minRoomSizeDefault = 3;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
@@ -69,7 +70,7 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 seed = 0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	FVector tileSpawnLocation;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -78,44 +79,44 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 sizeTemp = 0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
-	float offsetX = 86.6f;
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	float offsetX = 150.f;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
-	float offsetY = 100.0f;
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	float offsetY = 86.6f;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	FVector spawnLocation;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	FVector2D prevLocation = FVector2D(1,1);
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	FVector2D nextLocation = FVector2D(0,0);
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Spawn")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Spawn")
 	FRotator rotator;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 worldSize=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 lastIndex=0;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 tileIndex=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 posX=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 posY=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 triesToPlaceARoom=100;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
-	int32 skip=0;
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//int32 skip=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 spawnAmount = 4;
@@ -129,7 +130,7 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 despawnCount = 1;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomToSpawn=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
@@ -173,7 +174,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	bool GenerateRoom(int32 roomnum, int32 size=0);
+	bool GenerateRoom(int32 roomnum, int32 size=0, TEnumAsByte<ERoomTypes> RoomType = ERT_EnemyRoom);
 
 	UFUNCTION(BlueprintCallable)
 	bool CheckSpawnDespawn();

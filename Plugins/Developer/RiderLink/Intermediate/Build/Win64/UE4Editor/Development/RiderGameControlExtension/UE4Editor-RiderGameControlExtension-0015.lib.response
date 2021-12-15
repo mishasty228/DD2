@@ -6,6 +6,6 @@
 /NAME:"UE4Editor-RiderGameControlExtension-0015.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\RiderGameControlExtension.cpp.obj"
-"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\Default.rc2.res"
-/OUT:"F:\Diplom\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\UE4Editor-RiderGameControlExtension-0015.lib"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\RiderGameControlExtension.cpp.obj"
+"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\Default.rc2.res"
+/OUT:"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderGameControlExtension\UE4Editor-RiderGameControlExtension-0015.lib"
