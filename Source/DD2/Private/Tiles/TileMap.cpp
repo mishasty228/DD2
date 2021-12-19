@@ -12,6 +12,8 @@ ATileMap::ATileMap()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	spawnLocation = this->GetActorLocation();
+
+
 }
 
 void ATileMap::DunGenMain()
@@ -75,11 +77,11 @@ void ATileMap::SpawnEveryIndex()
 				}
 				break;
 			case ETT_Door:
-				if(TileBase)
+				if(TileDoor)
 				{
 					spawnLocation = this->GetActorLocation();
 					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDoor,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					CurTile->TilesStruct.r=i;
 					CurTile->TilesStruct.q=j;
@@ -126,11 +128,79 @@ void ATileMap::SpawnEveryIndex()
 				}
 				break;
 			case ETT_Portal:
-				if(TileBase)
+				if(TileDespawner)
 				{
 					spawnLocation = this->GetActorLocation();
 					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDespawner,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.s=i-j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_EnemySpawn:
+				if(TileEnemy)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileEnemy,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.s=i-j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Chest:
+				if(TileChest)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileChest,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.s=i-j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Key:
+				if(TileKey)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileKey,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->TilesStruct.r=i;
+					CurTile->TilesStruct.q=j;
+					CurTile->TilesStruct.s=i-j;
+					CurTile->TilesStruct.Available = false;
+					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Shop:
+				if(TileShop)
+				{
+					spawnLocation = this->GetActorLocation();
+					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileShop,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					CurTile->TilesStruct.r=i;
 					CurTile->TilesStruct.q=j;
@@ -244,8 +314,8 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 		startX=prevLocation.X-size+1;
 		startY=prevLocation.Y-size+1;
 	}
-
-	FRoomStruct TempRoom = FRoomStruct(RoomType, size, FVector2D(startX,startY));
+	if (CurRoomType!=ERT_Base) RoomType = CurRoomType;
+	FRoomStruct TempRoom = FRoomStruct(RoomType, size, FVector2D(startX,startY), RandomOdd(minEnemies, maxEnemies));
 	UE_LOG(LogTemp, Display, TEXT("ROOM %d is %d"), roomnum, RoomType.GetValue());
 
 	int32 start = startY;
@@ -256,7 +326,10 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 	//CornersOfRoomSetup
 	for (FVector2D dir : NeighsIndexes)
 	{
-		cornersTemp.Add(CoordToIndex(FVector2D(startX+size-1, startY+size-1)+dir*(size-1)));
+		//if (TileTypesTempBackup[CoordToIndex(FVector2D(startX+size-1, startY+size-1)+dir*(size-1))]==ETT_Wall)
+		int32 IndToAdd = CoordToIndex(FVector2D(startX+size-1, startY+size-1)+dir*(size-1));
+		cornersTemp.Add(IndToAdd);
+		
 	}
 
 	//TempRoomSetup
@@ -267,6 +340,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 		for(int32 j = start; j < end; j++)
 		{
 			tileIndex = worldSize*i+j;
+			UE_LOG(LogTemp, Display, TEXT("tileind %i %i %i"), tileIndex, i, j);
 			if (TileTypesTempBackup[tileIndex]!=ETT_None&&TileTypesTempBackup[tileIndex]!=ETT_Wall)
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("Room failed to generate because of collision at index %d"),tileIndex);
@@ -279,10 +353,10 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 				TileTypesTemp[tileIndex]=ETT_Wall;
 				//UE_LOG(LogTemp, Display, TEXT("Index %d is Wall"), tileIndex);
 			}
-			else if((j>start&&j<end-1)||(i>startX&&i<startX+size*2-2))
+			else if((j>start&&j<end-1)&&(i>startX&&i<startX+size*2-2))
 			{
 				TileTypesTemp[tileIndex]=ETT_Room;
-				TempRoom.WayTilesArray.Add(tileIndex);
+				if((j>start+1&&j<end-2)&&(i>startX+1&&i<startX+size*2-3)) TempRoom.WayTilesArray.Add(tileIndex);
 				//UE_LOG(LogTemp, Display, TEXT("Index %d is Room"), tileIndex);
 			}
 
@@ -306,8 +380,66 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 	}
 	else
 	{
+
+		switch(TempRoom.RoomType)
+		{
+		case ERT_SpawnRoom:
+			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			TileTypesTemp[selIndex]=ETT_Spawn;
+			TempRoom.WayTilesArray.Remove(selIndex);
+			spawnCount++;
+			spawned = true;
+			break;
+		case ERT_PortalRoom:
+			selIndex = CoordToIndex(TempRoom.start + (TempRoom.size-1)*NeighsIndexes[3]);
+			TileTypesTemp[selIndex]=ETT_Portal;
+			TempRoom.WayTilesArray.Remove(selIndex);
+			despawnCount++;
+			spawned = true;
+			break;
+		case ERT_EnemyRoom:
+			for (int32 i = 0; i < TempRoom.Enemies; i++)
+			{
+				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+				TileTypesTemp[selIndex] = ETT_EnemySpawn;
+				TempRoom.WayTilesArray.Remove(selIndex);
+			}
+			break;
+		case ERT_ChestRoom:
+			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			TileTypesTemp[selIndex]=ETT_Chest;
+			TempRoom.WayTilesArray.Remove(selIndex);
+			CurRoomType = ERT_KeyRoom;
+			chestCount++;
+			TileTypesTemp[TempRoom.cornerInd[(direction+3)%6]] = ETT_Door;
+			break;
+		case ERT_KeyRoom:
+			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			TileTypesTemp[selIndex]=ETT_Key;
+			TempRoom.WayTilesArray.Remove(selIndex);
+			for (int32 i = 0; i < TempRoom.Enemies; i++)
+			{
+				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+				TileTypesTemp[selIndex] = ETT_EnemySpawn;
+				TempRoom.WayTilesArray.Remove(selIndex);
+			}
+			keyCount++;
+			CurRoomType = ERT_Base;
+			break;
+		case ERT_ShopRoom:
+			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			//selIndex = CoordToIndex(IndexToCoord(TempRoom.cornerInd[RandomOdd(0,TempRoom.cornerInd.Num()-1)])+
+			//	NeighsIndexes[(direction+3)%6]*3);
+			TileTypesTemp[selIndex]=ETT_Shop;
+			TempRoom.WayTilesArray.Remove(selIndex);
+			TileTypesTemp[TempRoom.cornerInd[(direction+3)%6]] = ETT_Door;
+			shopCount++;
+			break;
+		default:
+			break;
+		}
 		
-		if (TempRoom.RoomType == ERT_SpawnRoom)//roomnum<roomAmount-despawnAmount&&RandStream.GetFraction()<0.5)
+		/*if (TempRoom.RoomType == ERT_SpawnRoom)//roomnum<roomAmount-despawnAmount&&RandStream.GetFraction()<0.5)
 			{
 			int32 selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
 			TileTypesTemp[selIndex]=ETT_Spawn;
@@ -322,7 +454,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 					spawned = true;
 					//UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
 				}
-			}*/
+			}*
 			}
 		else if (TempRoom.RoomType==ERT_PortalRoom)//roomnum>=roomAmount-despawnAmount)
 			{
@@ -339,15 +471,25 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 					spawned = true;
 					//UE_LOG(LogTemp, Warning, TEXT("Despawner placed at  %d, %d"), i-startX, j-start);
 				}
-			}*/
+			}*
 			}
+		else if (TempRoom.RoomType==ERT_EnemyRoom)
+			{
+			for (int32 i = 0; i < TempRoom.Enemies; i++)
+				{
+					int32 selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+					TileTypesTemp[selIndex] = ETT_EnemySpawn;
+					TempRoom.WayTilesArray.Remove(selIndex);
+				}
+			}
+		*/
 		/*if (spawned)
 		{
 			if (RoomType==ERT_SpawnRoom) spawnCount++;
 			else if (RoomType==ERT_PortalRoom) despawnCount++;
 		}*/
-		TileRooms.Add(TempRoom);
-		direction = RandomOdd(0,5);
+		if (TempRoom.RoomType!=ERT_ChestRoom && TempRoom.RoomType!=ERT_ShopRoom) TileRooms.Add(TempRoom);
+		direction = RandomOdd(0,TempRoom.cornerInd.Num()-1);
 	}
 	return success;
 }
@@ -361,12 +503,14 @@ bool ATileMap::GenerateCorridor(int32 size)
 
 	bool success = true;
 	
-	int32 startRoom = roomToSpawn;
+	int32 startRoom = TileRooms.Num()-1;
 	size = RandomOdd(minRoomSize,maxRoomSize);
 	//sizeTemp = size;
-	if (branching && RandStream.GetFraction()<branchChance && roomToSpawn<roomAmount-2) startRoom = RandomOdd(0,roomToSpawn);
+	if (branching && RandStream.GetFraction()<branchChance && roomToSpawn<roomAmount-2) startRoom = RandomOdd(0,TileRooms.Num()-1);
+
+	UE_LOG(LogTemp, Warning, TEXT("RoomAmount %d startRoom %d"), TileRooms.Num()-1 ,  startRoom  );
 	
-	int32 dir = RandomOdd(0, 5);
+	int32 dir = direction; //RandomOdd(0, TileRooms[startRoom].cornerInd.Num()-1);
 	
 	FVector2D startpoint = IndexToCoord(TileRooms[startRoom].cornerInd[dir]);
 	
@@ -569,11 +713,17 @@ int32 ATileMap::CoordToIndex(FVector2D coord)
 void ATileMap::RoomCorCycle()
 {
 	bool tempgood=true;
+	prevLocation = FVector2D(worldSize/2);
 	for (int32 i = 0; i< triesToPlaceARoom;i++)
 	{
 		spawnCount = 0;
 		despawnCount = 0;
+		shopCount = 0;
+		keyCount = 0;
+		chestCount = 0;
 		roomToSpawn = 0;
+		chestAmount = RandomOdd(1,2);
+		keyAmount = chestAmount;
 		TileTypesTemp.Empty();
 		TileRooms.Empty();
 		TileTypesTemp.Append(TileTypesTempBackup);
@@ -587,8 +737,25 @@ void ATileMap::RoomCorCycle()
 			for (int32 j = 0; j<triesToPlaceARoom;j++)
 			{
 				TEnumAsByte<ERoomTypes> Room = ERT_EnemyRoom;
-				if (roomToSpawn < spawnAmount) Room = ERT_SpawnRoom;
-				else if (roomToSpawn == roomAmount-1 ) Room = ERT_PortalRoom;
+				if (CurRoomType == ERT_Base)
+				{
+                    if (roomToSpawn < spawnAmount) Room = ERT_SpawnRoom;
+                    else if (roomToSpawn == roomAmount-1 ) Room = ERT_PortalRoom;
+                    else
+                    {
+                    	 if (RandStream.GetFraction() < 0.5)
+                    	 {
+	                    	 if (shopCount<shopAmount) Room = ERT_ShopRoom;
+	                    	 else Room = ERT_EnemyRoom; 
+                    	 }
+                    	else
+                    	{
+                    		if (chestCount<chestAmount) Room = ERT_ChestRoom;
+                    		else Room = ERT_EnemyRoom; 
+                    	}
+                    }
+				}
+				else Room = CurRoomType;
 				tempgood=GenerateRoom(roomToSpawn, sizeTemp, Room);
 				if (tempgood) break;
 			}

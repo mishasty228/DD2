@@ -10,6 +10,7 @@
 #include "TileBase.generated.h"
 
 class ACharBase;
+class ATileMap;
 struct FCharDataStruct;
 
 UCLASS()
@@ -48,6 +49,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Tiles")
 	TArray<ATileBase*> AvailableNeighs;
 
+	
+	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileCoordinates");
 	FVector CubeCoordinates = FVector().ZeroVector;
 

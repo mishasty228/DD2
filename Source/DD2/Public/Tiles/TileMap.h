@@ -42,6 +42,8 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<FRoomStruct> TileRooms;
+
+	
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
     TArray<TEnumAsByte<ETileType>> TileTypes;
@@ -105,6 +107,10 @@ public:
 	
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 tileIndex=0;
+	
+	int32 selIndex=0;
+
+    TEnumAsByte<ERoomTypes> CurRoomType = ERT_Base;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 posX=0;
@@ -121,20 +127,44 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 spawnAmount = 4;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 spawnCount = 4;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 despawnAmount = 1;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 despawnCount = 1;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 chestAmount = 0;
+
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 chestCount = 0;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 keyAmount = 0;
+
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 keyCount = 0;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 shopAmount = 1;
+
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 shopCount = 0;
 	
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomToSpawn=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomAmount=0;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 minEnemies=2;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 maxEnemies=4;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	bool branching=false;
@@ -153,6 +183,23 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
 	TSubclassOf<class ATileBase> TileDespawner;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileEnemy;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileShop;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileChest;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileKey;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileDoor;
+
+	
 
 	//Functions
 

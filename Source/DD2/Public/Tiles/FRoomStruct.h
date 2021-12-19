@@ -15,7 +15,7 @@ struct FRoomStruct
 
 	FORCEINLINE FRoomStruct(TEnumAsByte<ERoomTypes> Type);
 	
-	FORCEINLINE FRoomStruct(TEnumAsByte<ERoomTypes> Type, int32 Size, FVector2D Start);
+	FORCEINLINE FRoomStruct(TEnumAsByte<ERoomTypes> Type, int32 Size, FVector2D Start, int32 enemies);
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TArray<int32> WayTilesArray;
@@ -57,17 +57,19 @@ inline FRoomStruct::FRoomStruct(TEnumAsByte<ERoomTypes> Type)
 	CheckType(Type);
 }
 
-inline FRoomStruct::FRoomStruct(TEnumAsByte<ERoomTypes> Type, int32 Size, FVector2D Start)
+inline FRoomStruct::FRoomStruct(TEnumAsByte<ERoomTypes> Type, int32 Size, FVector2D Start, int32 enemies)
 {
 	CheckType(Type);
 	size = Size;
 	start = Start;
+	Enemies = enemies;
+	if (Type == ERT_KeyRoom) Enemies+=2;
 }
 
 inline void FRoomStruct::CheckType(TEnumAsByte<ERoomTypes> TypeRoom)
 {
 	RoomType = TypeRoom;
-	if (TypeRoom == ERT_ChestRoom)
+	if (TypeRoom == ERT_ChestRoom || TypeRoom == ERT_ShopRoom)
 	{
 		Enemies = 0;
 		bLocked = true;
