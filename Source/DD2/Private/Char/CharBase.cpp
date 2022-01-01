@@ -14,7 +14,7 @@ ACharBase::ACharBase()
 	Scene->SetupAttachment(this->GetMesh());
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
-	SpringArm->SetupAttachment(this->GetMesh());
+	SpringArm->SetupAttachment(GetCapsuleComponent());
 	SpringArm->TargetArmLength = 500;
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->SetRelativeRotation(FRotator(-45.0f, 60.0f, 0.0f));
@@ -44,5 +44,35 @@ void ACharBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("Mouse_Y", this, &ACharBase::Camera_YAxis);
+	PlayerInputComponent->BindAction("SpringUp", IE_Pressed, this, &ACharBase::SpringUp);
+	PlayerInputComponent->BindAction("SpringDown", IE_Pressed, this, &ACharBase::SpringDown);
+	
+	PlayerInputComponent->BindAction("CameraRotation", IE_Pressed, this, &ACharBase::SetCanRotateTrue);
+	PlayerInputComponent->BindAction("CameraRotation", IE_Released, this, &ACharBase::SetCanRotateFalse);
 }
+
+void ACharBase::Camera_YAxis(float Value)
+{
+	if (CanRotate)
+	{
+		SpringArm->AddRelativeRotation(FRotator(0,Value,0));
+	}
+}
+
+void ACharBase::SpringDown()
+{
+	SpringArm->TargetArmLength = FMath::Clamp(SpringArm->TargetArmLength+25, 250.0f, 1000.0f);
+}
+
+void ACharBase::SpringUp()
+{
+	SpringArm->TargetArmLength = FMath::Clamp(SpringArm->TargetArmLength-25, 250.0f, 1000.0f);
+}
+
+void ACharBase::SetPlayerController(ADD2PlayerController* controller)
+{
+	pc = controller;
+}
+
 

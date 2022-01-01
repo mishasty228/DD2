@@ -29,8 +29,10 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	AGameMaster* GameMaster;
 
+	bool bCanSelect = true;
+
 protected:
-	
+	virtual void BeginPlay() override;
 
 public:
 	UFUNCTION(BlueprintCallable)

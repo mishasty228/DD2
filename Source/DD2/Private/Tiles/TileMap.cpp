@@ -427,7 +427,8 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 			CurRoomType = ERT_Base;
 			break;
 		case ERT_ShopRoom:
-			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			//selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			selIndex = CoordToIndex(IndexToCoord(TempRoom.cornerInd[direction])+NeighsIndexes[(direction+3)%6]*3);
 			//selIndex = CoordToIndex(IndexToCoord(TempRoom.cornerInd[RandomOdd(0,TempRoom.cornerInd.Num()-1)])+
 			//	NeighsIndexes[(direction+3)%6]*3);
 			TileTypesTemp[selIndex]=ETT_Shop;
@@ -722,6 +723,7 @@ void ATileMap::RoomCorCycle()
 		keyCount = 0;
 		chestCount = 0;
 		roomToSpawn = 0;
+		prevLocation = FVector2D(worldSize/2);
 		chestAmount = RandomOdd(1,2);
 		keyAmount = chestAmount;
 		TileTypesTemp.Empty();
@@ -806,15 +808,12 @@ void ATileMap::RoomCorCycle()
 			TileTypes = TileTypesBackup;
 			break;
 		}
-		else
-		{
-			seed = 0;
-			TempArraysSetup();
-			RandStreamGen();
-			UE_LOG(LogTemp,Error, TEXT("Trying to generate another map with seed %d"), seed);
-			//GenerateAllIndexes();
-		}
-		
+		//Else
+		seed = 0;
+		TempArraysSetup();
+		RandStreamGen();
+		UE_LOG(LogTemp,Error, TEXT("Trying to generate another map with seed %d"), seed);
+		//GenerateAllIndexes();
 	}
 }
 

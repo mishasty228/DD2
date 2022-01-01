@@ -4,11 +4,14 @@
 
 
 #include "CharDataComponent.h"
+#include "DD2PlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "CharBase.generated.h"
 
+class ADD2PlayerController;
 class ATileBase;
 
 UCLASS()
@@ -28,10 +31,13 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
 	UCameraComponent* Camera;
-
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	UCharDataComponent* CharDataComponent;
+
+	bool CanRotate = false;
+	
+	ADD2PlayerController* pc;
 
 protected:
 	// Called when the game starts or when spawned
@@ -44,4 +50,28 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Camera_YAxis(float Value);
+	void SpringDown();
+	void SpringUp();
+
+	void SetPlayerController(ADD2PlayerController* controller);
+
+	void SetCanRotateTrue()
+	{
+		CanRotate = true;
+		if (pc)
+		{
+			pc->SetShowMouseCursor(false);
+			pc->bCanSelect = false;
+		}
+	}	
+	void SetCanRotateFalse()
+	{
+		CanRotate=false;
+		if (pc)
+		{
+			pc->SetShowMouseCursor(true);
+			pc->bCanSelect = true;
+		}
+	}
 };

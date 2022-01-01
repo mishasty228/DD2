@@ -3,7 +3,15 @@
 
 #include "DD2PlayerController.h"
 
+#include "../../../Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include/spdlog/fmt/bundled/format.h"
 #include "Char/CharBase.h"
+
+void ADD2PlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	if (bCanSelect) SetShowMouseCursor(true);
+	
+}
 
 void ADD2PlayerController::SetNextChar()
 {
@@ -11,9 +19,12 @@ void ADD2PlayerController::SetNextChar()
 	{
 		if (CharactersForTurn.Num()>=1)
 		{
+			if (CurrentCharacter) CurrentCharacter->SetPlayerController(nullptr);
 			CurrentCharacter = CharactersForTurn[0];
 			this->SetViewTargetWithBlend(CurrentCharacter, 1.f);
-
+			UnPossess();
+			Possess(CurrentCharacter);
+			CurrentCharacter->SetPlayerController(this);
 			UE_LOG(LogTemp, Display, TEXT("%s character with speed %d"),
 				*CurrentCharacter->CharDataComponent->CharData.Name, CurrentCharacter->CharDataComponent->CharData.SPD);
 		

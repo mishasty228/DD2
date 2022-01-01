@@ -3,7 +3,13 @@
 #include "scheduler/base/IScheduler.h"
 #include "wire/SocketWire.h"
 
+#include "Runtime/Launch/Resources/Version.h"
+
+#if ENGINE_MAJOR_VERSION >= 5
+#include "HAL/PlatformFileManager.h"
+#else
 #include "HAL/PlatformFilemanager.h"
+#endif
 #include "Misc/App.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -20,7 +26,6 @@
 #include "Windows/HideWindowsPlatformTypes.h"
 #endif
 
-#include "Runtime/Launch/Resources/Version.h"
 #include "spdlog/sinks/daily_file_sink.h"
 
 static FString GetLocalAppdataFolder()
@@ -79,7 +84,7 @@ static FString GetLogFile()
 void ProtocolFactory::InitRdLogging()
 {
     spdlog::set_level(spdlog::level::err);
-#if ENABLE_LOG_FILE == 1
+#if defined(ENABLE_LOG_FILE) && ENABLE_LOG_FILE == 1
     const FString LogFile = GetLogFile();
     const FString Msg = TEXT("[RiderLink] Path to log file: ") + LogFile;
     auto FileLogger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(*LogFile, 23, 59);
