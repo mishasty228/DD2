@@ -2,9 +2,9 @@
 	"RemapUnityFiles": 
 	{
 		"Module.RiderLink.cpp.obj": [
+			"ProtocolFactory.cpp.obj",
 			"RiderLink.cpp.obj",
 			"UE4TypesMarshallers.cpp.obj",
-			"ProtocolFactory.cpp.obj",
 			"instantiations_UE4Library.cpp.obj",
 			"BlueprintFunction.Generated.cpp.obj",
 			"BlueprintHighlighter.Generated.cpp.obj",

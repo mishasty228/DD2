@@ -35,9 +35,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	UCharDataComponent* CharDataComponent;
 
-	bool CanRotate = false;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 CurIndex=0;
 	
-	ADD2PlayerController* pc;
 
 protected:
 	// Called when the game starts or when spawned
@@ -49,29 +49,4 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void Camera_YAxis(float Value);
-	void SpringDown();
-	void SpringUp();
-
-	void SetPlayerController(ADD2PlayerController* controller);
-
-	void SetCanRotateTrue()
-	{
-		CanRotate = true;
-		if (pc)
-		{
-			pc->SetShowMouseCursor(false);
-			pc->bCanSelect = false;
-		}
-	}	
-	void SetCanRotateFalse()
-	{
-		CanRotate=false;
-		if (pc)
-		{
-			pc->SetShowMouseCursor(true);
-			pc->bCanSelect = true;
-		}
-	}
 };

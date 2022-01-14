@@ -8,7 +8,10 @@
 #include "TileRoom.h"
 #include "GameFramework/Actor.h"
 #include "Math/RandomStream.h"
+#include "Kismet/GameplayStatics.h"
 #include "TileMap.generated.h"
+
+class AGameMaster;
 
 UCLASS()
 class DD2_API ATileMap : public AActor
@@ -22,6 +25,8 @@ public:
 	FActorSpawnParameters spawnParams = FActorSpawnParameters();
 	
 	UWorld* world = GetWorld();
+
+	FTimerHandle TimerHandle;
 	
 	//Properties
 
@@ -42,8 +47,6 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<FRoomStruct> TileRooms;
-
-	
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
     TArray<TEnumAsByte<ETileType>> TileTypes;
@@ -254,7 +257,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DoOptionalCorridors(int32 start, int32 end, int32 dir);
-		
+
+	UFUNCTION(BlueprintCallable)
+    ATileBase* FindTileByIndex(int32 index);
+
+    UFUNCTION(BlueprintCallable)
+    TArray<ATileBase*> FindTilesInRange(int32 index, int32 range);
+	
 	protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -18,6 +18,9 @@ struct FTilesStruct
 	FORCEINLINE FTilesStruct();
 	
 	explicit FORCEINLINE FTilesStruct(FVector Loc, bool BAvailable, bool BVisited);
+	explicit FORCEINLINE FTilesStruct(int32 R, int32 Q, int32 S, int32 Ind);
+
+	
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 r = 0;
@@ -58,6 +61,14 @@ FORCEINLINE FTilesStruct::FTilesStruct(
 	Location = Loc;
 	Available = BAvailable;
 	Visited = BVisited;
+}
+
+inline FTilesStruct::FTilesStruct(int32 R, int32 Q, int32 S, int32 Ind)
+{
+	r = R;
+	q = Q;
+	s = S;
+	aind = Ind;
 }
 
 FORCEINLINE bool FTilesStruct::operator==(const FTilesStruct& A) const

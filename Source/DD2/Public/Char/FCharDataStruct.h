@@ -42,8 +42,8 @@ struct FCharDataStruct
  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
  int32 AR = 1;
 
- /*UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
- UTexture2D* Thumbnail;*/
+ UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
+ UTexture2D* Thumbnail;
 
  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
  TArray<ATileBase*> TilesInActionRange;

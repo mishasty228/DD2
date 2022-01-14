@@ -31,16 +31,10 @@ public:
 
 	bool bCanSelect = true;
 
+
 protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void SetNextChar();
-
-	UFUNCTION(BlueprintCallable)
-	void SumHeroesUp();
-
-	UFUNCTION(BlueprintCallable)
-	void SortChars();
+	
 };

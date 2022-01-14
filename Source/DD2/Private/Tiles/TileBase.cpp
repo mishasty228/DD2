@@ -10,6 +10,8 @@
 ATileBase::ATileBase()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+
+	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	Scene = CreateDefaultSubobject<USceneComponent>("Scene");
 	SphereToCheckNeighs = CreateDefaultSubobject<USphereComponent>("SphereToCheckNeighs");
@@ -29,7 +31,7 @@ ATileBase::ATileBase()
 	Sphere->SetSphereRadius(40);
 	SphereToCheckNeighs->OnComponentBeginOverlap.AddDynamic(this, &ATileBase::OnSideSphereOverlap);
 	SphereToCheckNeighs->SetSphereRadius(200);
-
+	
 }
 
 void ATileBase::OnStep(UPrimitiveComponent* OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp,
@@ -79,6 +81,7 @@ void ATileBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	MIDynamic = Mesh->CreateAndSetMaterialInstanceDynamic(0);
 }
 
 // Called every frame
@@ -86,5 +89,15 @@ void ATileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ATileBase::SetMatScalarParameter(FName Name, float Value)
+{
+	if (MIDynamic) MIDynamic->SetScalarParameterValue(Name, Value);
+}
+
+void ATileBase::SetMatVectorParameter(FName Name, FLinearColor Value)
+{
+	if (MIDynamic) MIDynamic->SetVectorParameterValue(Name,Value);
 }
 

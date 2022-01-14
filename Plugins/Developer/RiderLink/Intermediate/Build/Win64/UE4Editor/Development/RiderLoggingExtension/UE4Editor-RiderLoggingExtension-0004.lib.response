@@ -6,7 +6,6 @@
 /NAME:"UE4Editor-RiderLoggingExtension-0004.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLoggingExtension\RiderLoggingExtension.cpp.obj"
 "F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLoggingExtension\Module.RiderLoggingExtension.cpp.obj"
 "F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLoggingExtension\Default.rc2.res"
 /OUT:"F:\MyGit\DD2\Plugins\Developer\RiderLink\Intermediate\Build\Win64\UE4Editor\Development\RiderLoggingExtension\UE4Editor-RiderLoggingExtension-0004.lib"

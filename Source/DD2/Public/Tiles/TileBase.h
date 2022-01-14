@@ -6,6 +6,7 @@
 #include "TilesStruct.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/Actor.h"
 #include "TileBase.generated.h"
 
@@ -49,7 +50,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Tiles")
 	TArray<ATileBase*> AvailableNeighs;
 
-	
+	UPROPERTY()
+	UMaterialInstanceDynamic* MIDynamic;
+
+	UPROPERTY()
+	AActor* OnActor;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileCoordinates");
 	FVector CubeCoordinates = FVector().ZeroVector;
@@ -73,7 +78,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CheckAvailableNeighs();
 
-
+	
 	
 protected:
 	
@@ -85,4 +90,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SetMatScalarParameter(FName Name, float Value);
+
+	UFUNCTION(BlueprintCallable)
+	void SetMatVectorParameter(FName Name, FLinearColor Value);
 };

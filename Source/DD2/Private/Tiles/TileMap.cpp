@@ -3,6 +3,9 @@
 
 #include "Tiles/TileMap.h"
 
+#include "Char/GameMaster.h"
+
+
 // Sets default values
 ATileMap::ATileMap()
 {
@@ -40,20 +43,19 @@ void ATileMap::SpawnEveryIndex()
 		for (int32 j = 0; j < worldSize; j++)
 		{
 			posY = j;
+			spawnLocation = this->GetActorLocation();
+			spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+			FTilesStruct TilesStruct = FTilesStruct(i,j,i-j, CoordToIndex(FVector2D(i,j)));
 			switch (TileTypes[i*worldSize+j])
 			{
 			case ETT_Room:
 				if(TileBase)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = true;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -62,15 +64,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Path:
 				if(TileBase)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -79,15 +77,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Door:
 				if(TileDoor)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDoor,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -96,15 +90,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Wall:
 				if(TileBase)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -113,15 +103,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Spawn:
 				if(TileSpawner)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileSpawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -130,15 +116,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Portal:
 				if(TileDespawner)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDespawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -147,15 +129,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_EnemySpawn:
 				if(TileEnemy)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileEnemy,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -164,15 +142,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Chest:
 				if(TileChest)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileChest,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -181,15 +155,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Key:
 				if(TileKey)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileKey,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -198,15 +168,11 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Shop:
 				if(TileShop)
 				{
-					spawnLocation = this->GetActorLocation();
-					spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileShop,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					CurTile->TilesStruct.r=i;
-					CurTile->TilesStruct.q=j;
-					CurTile->TilesStruct.s=i-j;
-					CurTile->TilesStruct.Available = false;
-					CurTile->TilesStruct.TileType = TileTypes[i*worldSize+j];
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
 					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
 					true));
@@ -282,6 +248,42 @@ void ATileMap::RandStreamGen()
 	else RandStream = FRandomStream(seed);
 }
 
+ATileBase* ATileMap::FindTileByIndex(int32 index)
+{
+	ATileBase* IndexedTile = nullptr;
+	UE_LOG(LogTemp,Display,TEXT("Looking for tile with index %i"), index);
+	for (ATileBase* Tile : Tiles)
+	{
+		if (Tile->TilesStruct.aind == index)
+		{
+			IndexedTile = Tile;
+			break;
+		}
+	}
+	return IndexedTile;
+}
+//ToFix
+
+TArray<ATileBase*> ATileMap::FindTilesInRange(int32 index, int32 range)
+{
+	TArray<ATileBase*> Result;
+	int32 dif = 0;
+	FVector2D Start = IndexToCoord(index);
+	UE_LOG(LogTemp, Display, TEXT("Range %i"), range);
+	for (int32 j = Start.X-range; j <= Start.X+range; j++, dif++)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Row found %i"), j);
+		for (int32 i = FMath::Min<int32>(Start.Y+dif, Start.Y+range);
+			i >= FMath::Max<int32>(Start.Y-range, Start.Y-range-range+dif); i--)
+		{
+			UE_LOG(LogTemp, Display, TEXT("Col found %i"), i);
+			ATileBase* Tile = FindTileByIndex(CoordToIndex(FVector2D(j,i)));
+			if (Tile) Result.Add(Tile);
+		}
+	}
+	return Result;
+}
+
 /**
  * @brief Generates room at certain location
  * @param roomnum Current number of rooms generated
@@ -316,7 +318,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 	}
 	if (CurRoomType!=ERT_Base) RoomType = CurRoomType;
 	FRoomStruct TempRoom = FRoomStruct(RoomType, size, FVector2D(startX,startY), RandomOdd(minEnemies, maxEnemies));
-	UE_LOG(LogTemp, Display, TEXT("ROOM %d is %d"), roomnum, RoomType.GetValue());
+	//UE_LOG(LogTemp, Display, TEXT("ROOM %d is %d"), roomnum, RoomType.GetValue());
 
 	int32 start = startY;
 	int32 end = startY+size;
@@ -340,7 +342,7 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 		for(int32 j = start; j < end; j++)
 		{
 			tileIndex = worldSize*i+j;
-			UE_LOG(LogTemp, Display, TEXT("tileind %i %i %i"), tileIndex, i, j);
+			//UE_LOG(LogTemp, Display, TEXT("tileind %i %i %i"), tileIndex, i, j);
 			if (TileTypesTempBackup[tileIndex]!=ETT_None&&TileTypesTempBackup[tileIndex]!=ETT_Wall)
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("Room failed to generate because of collision at index %d"),tileIndex);
@@ -380,13 +382,15 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 	}
 	else
 	{
-
 		switch(TempRoom.RoomType)
 		{
 		case ERT_SpawnRoom:
-			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-			TileTypesTemp[selIndex]=ETT_Spawn;
-			TempRoom.WayTilesArray.Remove(selIndex);
+			for(int32 i = 0; i<2;i++)
+			{
+				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+				TileTypesTemp[selIndex]=ETT_Spawn;
+				TempRoom.WayTilesArray.Remove(selIndex);
+			}
 			spawnCount++;
 			spawned = true;
 			break;
@@ -509,7 +513,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 	//sizeTemp = size;
 	if (branching && RandStream.GetFraction()<branchChance && roomToSpawn<roomAmount-2) startRoom = RandomOdd(0,TileRooms.Num()-1);
 
-	UE_LOG(LogTemp, Warning, TEXT("RoomAmount %d startRoom %d"), TileRooms.Num()-1 ,  startRoom  );
+	//UE_LOG(LogTemp, Warning, TEXT("RoomAmount %d startRoom %d"), TileRooms.Num()-1 ,  startRoom  );
 	
 	int32 dir = direction; //RandomOdd(0, TileRooms[startRoom].cornerInd.Num()-1);
 	
@@ -601,7 +605,7 @@ void ATileMap::FindOptionalCorridors()
 			{
 				//FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
 				int32 len = res.Size();
-				UE_LOG(LogTemp, Display, TEXT("XYDistance between rooms %i and %i is %i "), i, j , len);
+				//UE_LOG(LogTemp, Display, TEXT("XYDistance between rooms %i and %i is %i "), i, j , len);
 				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
 				
 				//if (len<maxRoomSize*3)
@@ -628,7 +632,7 @@ void ATileMap::FindOptionalCorridors()
 			{
 				//FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
 				int32 len = res.Size();
-				UE_LOG(LogTemp, Display, TEXT("XDistance between rooms %i and %i is %i"), i, j , len);
+				//UE_LOG(LogTemp, Display, TEXT("XDistance between rooms %i and %i is %i"), i, j , len);
 				
 				//if (len<maxRoomSize*3)
 				//{
@@ -653,7 +657,7 @@ void ATileMap::FindOptionalCorridors()
 			else if ((A.start+(A.size-1)).Y == (B.start+(B.size-1)).Y)
 			{
 				int32 len = res.Size();
-				UE_LOG(LogTemp, Display, TEXT("YDistance between rooms %i and %i is %i"), i, j , len);
+				//UE_LOG(LogTemp, Display, TEXT("YDistance between rooms %i and %i is %i"), i, j , len);
 				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
 				//if (len<maxRoomSize*3)
 				//{
@@ -680,7 +684,7 @@ void ATileMap::FindOptionalCorridors()
 bool ATileMap::CheckSpawnDespawn()
 {
 	bool allSet = true;
-	UE_LOG(LogTemp, Warning, TEXT("Spawns places: %d, despawns placed %d"), spawnCount, despawnCount);
+	//UE_LOG(LogTemp, Warning, TEXT("Spawns places: %d, despawns placed %d"), spawnCount, despawnCount);
 	if (spawnCount>=spawnAmount&&despawnCount>=despawnAmount) allSet=true;
 	else allSet=false;
 	spawnCount=0;
@@ -844,7 +848,7 @@ void ATileMap::DoOptionalCorridors(int32 start, int32 end, int32 dir)
 	else if ((dir % 3) == 1 ) length = abs (B.X-A.X);
 	else if ((dir % 3) == 2 ) length = abs (B.Y-A.Y);
 
-	UE_LOG(LogTemp,Display,TEXT("Distance is %i and direction is %i"), length, dir);
+	//UE_LOG(LogTemp,Display,TEXT("Distance is %i and direction is %i"), length, dir);
 	if (length < maxRoomSize+1)
 	{
 		for (int32 i = 1; i <= length; i++)
@@ -866,16 +870,16 @@ void ATileMap::DoOptionalCorridors(int32 start, int32 end, int32 dir)
 void ATileMap::BeginPlay()
 {
 	Super::BeginPlay();
-	/*RandStreamGen();
-	//minRoomSizeDefault = minRoomSize;
-	prevLocation = FVector2D(worldSize/2);
-	GenerateAllIndexes();
-	TempArraysSetup();
-	//RoomCorCycle();
-	GenerateRoom(0, 6 ,ERT_PortalRoom);
-	TileTypes = TileTypesTemp;
-	SpawnEveryIndex();*/
 	DunGenMain();
+	
+	AGameMaster* GM = Cast<AGameMaster>(UGameplayStatics::GetPlayerCharacter(this,0));
+	if(GM)
+	{
+	GM->Map = this;
+	GetWorldTimerManager().SetTimer(TimerHandle, GM , &AGameMaster::SetNextChar, 2.0f);
+		UE_LOG(LogTemp, Display, TEXT("Found Map"));
+	}
+
 }
 
 // Called every frame

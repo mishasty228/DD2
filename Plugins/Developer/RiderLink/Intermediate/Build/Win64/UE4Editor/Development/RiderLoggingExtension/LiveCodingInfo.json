@@ -2,8 +2,8 @@
 	"RemapUnityFiles": 
 	{
 		"Module.RiderLoggingExtension.cpp.obj": [
-			"RiderOutputDevice.cpp.obj",
-			"RiderLoggingExtension.cpp.obj"
+			"RiderLoggingExtension.cpp.obj",
+			"RiderOutputDevice.cpp.obj"
 		]
 	}
 }
