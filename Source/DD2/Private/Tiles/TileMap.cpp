@@ -87,6 +87,7 @@ void ATileMap::SpawnEveryIndex()
 					true));
 				}
 				break;
+			case ETT_Block:
 			case ETT_Wall:
 				if(TileBase)
 				{
@@ -262,7 +263,6 @@ ATileBase* ATileMap::FindTileByIndex(int32 index)
 	}
 	return IndexedTile;
 }
-//ToFix
 
 TArray<ATileBase*> ATileMap::FindTilesInRange(int32 index, int32 range)
 {
@@ -282,6 +282,50 @@ TArray<ATileBase*> ATileMap::FindTilesInRange(int32 index, int32 range)
 		}
 	}
 	return Result;
+}
+
+TArray<ATileBase*> ATileMap::FindTilesReachable(int32 index, int32 range)
+{
+	TArray<ATileBase*> Result;
+	TArray<int32> Visited;
+	TArray<int32> LastRun;
+	TArray<int32> CurRun;
+	int32 start = index;
+	ATileBase* CheckTile; 
+	
+	Visited.Add(start);
+	Result.Add(FindTileByIndex(start));
+	LastRun.Add(start);
+	
+	for (int32 k = 1; k <= range; k++)
+	{
+		for (int32 i : LastRun)
+		{
+			for (FVector2D N : NeighsIndexes)
+			{
+				int32 curInd = CoordToIndex(IndexToCoord(i)+N);
+				CheckTile = FindTileByIndex(curInd);
+				if (CheckTile && !Visited.Contains(curInd) && CheckTile->TilesStruct.Available)
+				{
+					UE_LOG(LogTemp,Display,TEXT("Found available nonvisited tile"));
+					CurRun.Add(curInd);
+					Visited.Add(curInd);
+					Result.Add(CheckTile);
+				}
+			}
+		}
+		LastRun = CurRun;
+		CurRun.Empty();
+	}
+	return Result;
+}
+
+int32 ATileMap::GetDistance(int32 A, int32 B)
+{
+	int32 dR = (IndexToCoord(B).X-IndexToCoord(A).X);
+	int32 dQ = (IndexToCoord(B).Y-IndexToCoord(A).Y);
+	if (dR*dQ<0) return (FMath::Abs(dR)+FMath::Abs(dQ));
+	return FMath::Max(FMath::Abs(dR),FMath::Abs(dQ));
 }
 
 /**
@@ -382,6 +426,12 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 	}
 	else
 	{
+		for(int32 i = 0; i<RandomOdd(1,size-2);i++)
+		{
+			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+			TileTypesTemp[selIndex]=ETT_Block;
+			TempRoom.WayTilesArray.Remove(selIndex);
+		}
 		switch(TempRoom.RoomType)
 		{
 		case ERT_SpawnRoom:

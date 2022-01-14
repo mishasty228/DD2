@@ -9,6 +9,7 @@ enum ETileType
 {
 	ETT_None UMETA(DisplayName="Nothing"),
 	ETT_Wall UMETA(DisplayName="Barrier"),
+	ETT_Block UMETA(DisplayName="Block"),
 	ETT_Path UMETA(DisplayName="Way"),
 	ETT_Portal UMETA(DisplayName="Portal"),
 	ETT_Spawn UMETA(DisplayName="Spawn"),

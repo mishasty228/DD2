@@ -51,21 +51,18 @@ void AGameMaster::SetNextChar()
 		if (CharactersForTurn.Num()>=1)
 		{
 			ATileBase* Tile;
-			if (SelectedTile)
-			{
-				SelectedTile->SetMatScalarParameter("Boost", 0.0f);
-				SelectedTile->SetMatVectorParameter("Emissive", FLinearColor(1,1,1,1));
-			}
+			//ClearSelected
+			if (SelectedTile) SelectedTile->ClearMatColor();
 			if(CurrentCharacter)
 			{
 				Tile = Map->FindTileByIndex(CurrentCharacter->CurIndex);
-				if (Tile)
-				{
-					Tile->SetMatScalarParameter("Boost", 0.0f);
-					Tile->SetMatVectorParameter("Emissive", FLinearColor(1,1,1,1));
-				}
+				if (Tile) Tile->ClearMatColor();
 			}
+			ClearAvailable();
+			
+			
 			CurrentCharacter = CharactersForTurn[0];
+			AP = CurrentCharacter->CharDataComponent->CharData.AP;
 			Tile = Map->FindTileByIndex(CurrentCharacter->CurIndex);
 			if (Tile)
 			{
@@ -76,25 +73,8 @@ void AGameMaster::SetNextChar()
 			UE_LOG(LogTemp, Display, TEXT("%s character with speed %d"),
 				*CurrentCharacter->CharDataComponent->CharData.Name, CurrentCharacter->CharDataComponent->CharData.SPD);
 			CharactersForTurn.RemoveAt(0);
-			for (ATileBase* TileinMap : Map->FindTilesInRange(CurrentCharacter->CurIndex, CurrentCharacter->CharDataComponent->CharData.AP))
-			{
-				if (TileinMap->TilesStruct.Available)
-				{
-					TileinMap->SetMatScalarParameter("Boost", .5f);
-					TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Blue);
-				}
-				else
-				{
-					TileinMap->SetMatScalarParameter("Boost", .5f);
-					TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Red);
-				}
-				if (TileinMap->TilesStruct.aind==CurrentCharacter->CurIndex)
-				{
-					TileinMap->SetMatScalarParameter("Boost", .5f);
-					TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Yellow);
-				}
-			}
-			
+			AvailableTiles = Map->FindTilesReachable(CurrentCharacter->CurIndex, AP);
+			ColorAvailable();
 		}
 		else
 		{
@@ -166,7 +146,24 @@ void AGameMaster::Select()
 		if (HitActor)
 		{
 			SelectedTile = HitActor;
-			if (SelectedTile->TilesStruct.Available)
+			if (AvailableTiles.Contains(HitActor))
+			{
+				CurrentCharacter->K2_TeleportTo(
+				HitActor->GetActorLocation()+FVector(0,0,20),CurrentCharacter->GetActorRotation());
+				AP-=Map->GetDistance(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind);
+				Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
+				CurrentCharacter->CurIndex= SelectedTile->TilesStruct.aind;
+				Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
+				ClearAvailable();
+			}
+			if (AP <=0) SetNextChar();
+			else
+			{
+				UE_LOG(LogTemp, Display, TEXT("Looking For Left Tiles"));
+				AvailableTiles = Map->FindTilesReachable(CurrentCharacter->CurIndex, AP);
+				ColorAvailable();
+			}
+			/*if (SelectedTile->TilesStruct.Available)
 			{
 				SelectedTile->SetMatScalarParameter("Boost", .5f);
 				SelectedTile->SetMatVectorParameter("Emissive", FLinearColor().Blue);
@@ -180,11 +177,33 @@ void AGameMaster::Select()
             {
             	SelectedTile->SetMatScalarParameter("Boost", .5f);
             	SelectedTile->SetMatVectorParameter("Emissive", FLinearColor().Yellow);
-            }
+            }*/ //Can be good on hover tile
 		}
 		else SelectedTile = nullptr;
 	}
 	
+}
+
+void AGameMaster::ClearAvailable()
+{
+	for (ATileBase* T : AvailableTiles)
+	{
+		if (T) T->ClearMatColor();
+	}
+}
+
+void AGameMaster::ColorAvailable()
+{
+	for (ATileBase* TileinMap : AvailableTiles)
+	{
+		TileinMap->SetMatScalarParameter("Boost", .5f);
+		TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Green);
+		if (TileinMap->TilesStruct.aind==CurrentCharacter->CurIndex)
+		{
+			TileinMap->SetMatScalarParameter("Boost", .5f);
+			TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Yellow);
+		}
+	}
 }
 
 void AGameMaster::Camera_YAxis(float Value)

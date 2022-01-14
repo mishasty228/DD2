@@ -34,6 +34,8 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	ACharBase* CurrentCharacter;
 
+	int32 AP=0;
+
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	AGameMaster* GameMaster;
 
@@ -47,6 +49,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	ATileBase* SelectedTile;
+
+	UPROPERTY()
+	TArray <ATileBase*> AvailableTiles;
 
 	UPROPERTY()
 	int32 Turn;
@@ -77,6 +82,9 @@ public:
 	void SortChars();
 
 	void Select();
+
+	void ClearAvailable();
+	void ColorAvailable();
 
 	void Camera_YAxis(float Value);
 	void SpringDown();

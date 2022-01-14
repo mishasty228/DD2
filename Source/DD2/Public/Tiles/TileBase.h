@@ -94,5 +94,12 @@ public:
 	void SetMatScalarParameter(FName Name, float Value);
 
 	UFUNCTION(BlueprintCallable)
+	void ClearMatColor()
+	{
+		SetMatScalarParameter("Boost", 0.0f);
+		SetMatVectorParameter("Emissive", FLinearColor(1,1,1,1));
+	}
+	
+	UFUNCTION(BlueprintCallable)
 	void SetMatVectorParameter(FName Name, FLinearColor Value);
 };

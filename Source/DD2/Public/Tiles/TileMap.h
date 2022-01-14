@@ -263,6 +263,12 @@ public:
 
     UFUNCTION(BlueprintCallable)
     TArray<ATileBase*> FindTilesInRange(int32 index, int32 range);
+
+	UFUNCTION(BlueprintCallable)
+    TArray<ATileBase*> FindTilesReachable(int32 index, int32 range);
+
+	UFUNCTION()
+	int32 GetDistance(int32 A, int32 B);
 	
 	protected:
 	// Called when the game starts or when spawned
