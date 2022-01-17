@@ -252,7 +252,7 @@ void ATileMap::RandStreamGen()
 ATileBase* ATileMap::FindTileByIndex(int32 index)
 {
 	ATileBase* IndexedTile = nullptr;
-	UE_LOG(LogTemp,Display,TEXT("Looking for tile with index %i"), index);
+	//UE_LOG(LogTemp,Display,TEXT("Looking for tile with index %i"), index);
 	for (ATileBase* Tile : Tiles)
 	{
 		if (Tile->TilesStruct.aind == index)
@@ -307,7 +307,8 @@ TArray<ATileBase*> ATileMap::FindTilesReachable(int32 index, int32 range)
 				CheckTile = FindTileByIndex(curInd);
 				if (CheckTile && !Visited.Contains(curInd) && CheckTile->TilesStruct.Available)
 				{
-					UE_LOG(LogTemp,Display,TEXT("Found available nonvisited tile"));
+					//UE_LOG(LogTemp,Display,TEXT("Found available nonvisited tile"));
+					CheckTile->Distance=k;
 					CurRun.Add(curInd);
 					Visited.Add(curInd);
 					Result.Add(CheckTile);
@@ -320,12 +321,117 @@ TArray<ATileBase*> ATileMap::FindTilesReachable(int32 index, int32 range)
 	return Result;
 }
 
+TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
+{
+	TArray<int32> Path;
+	TArray<int32> openPath;
+	TArray<int32> closedPath;
+
+	int32 CurIndex = A;
+
+	ATileBase* CurTile = FindTileByIndex(A);
+	CurTile->H = GetDistance(CurIndex, B);
+
+	openPath.Add(CurIndex);
+	while (openPath.Num() != 0)
+	{
+		openPath = SortFG(openPath);
+		CurIndex = openPath[0];
+		openPath.Remove(CurIndex);
+		closedPath.Add(CurIndex);
+		UE_LOG(LogTemp,Display,TEXT("Added index %i to closedPath"), CurIndex);
+		
+		int32 g = FindTileByIndex(CurIndex)->G + 1;
+
+		if (closedPath.Contains(B))
+		{
+			break;
+		}
+
+		for (FVector2D dir : NeighsIndexes)
+		{
+			int32 adTile = CoordToIndex(IndexToCoord(CurIndex) + dir);
+			ATileBase* CheckTile = FindTileByIndex(adTile);
+			if (CheckTile)
+			{
+				if (CheckTile->TilesStruct.Available == false)
+				{
+					continue;
+				}
+				if (closedPath.Contains(adTile))
+				{
+					continue;
+				}
+				if (!openPath.Contains(adTile))
+				{
+					CheckTile->G = GetDistance(A, adTile);
+					CheckTile->H = GetDistance(adTile, B);
+					CheckTile->F = CheckTile->G + CheckTile->H;
+					openPath.Add(adTile);
+					UE_LOG(LogTemp,Display,TEXT("Added index %i to openPath"), adTile);
+				}
+				else if (CheckTile->F > g + CheckTile->H)
+				{
+					CheckTile->G = g;
+				}
+			}
+		}
+	}
+
+	if (closedPath.Contains(B))
+	{
+		CurIndex = B;
+		Path.Add(CurIndex);
+		for (int32 i = FindTileByIndex(B)->G; i >= 0; i--)
+		{
+			for (FVector2D dir : NeighsIndexes)
+			{
+				int32 adTile = CoordToIndex(IndexToCoord(CurIndex) + dir);
+				ATileBase* CheckTile = FindTileByIndex(adTile);
+				if (CheckTile->G == i && closedPath.Contains(adTile))
+				{
+					UE_LOG(LogTemp, Display, TEXT("Path index is %i"), CurIndex);
+					CurIndex = adTile;
+					Path.Add(CurIndex);
+					break;
+				}
+			}
+		}
+	}
+
+	return Path;
+}
+
 int32 ATileMap::GetDistance(int32 A, int32 B)
 {
 	int32 dR = (IndexToCoord(B).X-IndexToCoord(A).X);
 	int32 dQ = (IndexToCoord(B).Y-IndexToCoord(A).Y);
 	if (dR*dQ<0) return (FMath::Abs(dR)+FMath::Abs(dQ));
 	return FMath::Max(FMath::Abs(dR),FMath::Abs(dQ));
+}
+
+int32 ATileMap::GetTDistance(int32 B)
+{
+	return FindTileByIndex(B)->Distance;
+}
+
+int32 ATileMap::GetFDistance(int32 A, int32 B, int32 C)
+{
+	return GetDistance(A, B) + GetDistance(B, C);
+}
+
+TArray<int32> ATileMap::SortFG(TArray<int32> indexes)
+{
+	TArray<int32> result = indexes;
+	result.Sort([this](const int32 A, const int32 B)
+	{
+		return FindTileByIndex(A)->F < FindTileByIndex(B)->F;
+	});
+	result.Sort([this](const int32 A, const int32 B)
+	{
+		return FindTileByIndex(A)->G < FindTileByIndex(B)->G;
+	});
+	return result;
 }
 
 /**

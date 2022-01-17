@@ -62,6 +62,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileCoordinates");
 	FVector2D HexCoordinates = FVector2D().ZeroVector;
 
+	
+	int32 Distance = 0;
+	int32 G = 0;
+	int32 H = 0;
+	int32 F = 0;
+
+	
 	UFUNCTION(BlueprintCallable)
 	void OnStep( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 							 UPrimitiveComponent* OtherComp,
@@ -98,6 +105,17 @@ public:
 	{
 		SetMatScalarParameter("Boost", 0.0f);
 		SetMatVectorParameter("Emissive", FLinearColor(1,1,1,1));
+	}
+
+	
+	UFUNCTION()
+	void ResetParams()
+	{
+		ClearMatColor();
+		Distance = 0;
+		G = 0;
+		H = 0;
+		F = 0;
 	}
 	
 	UFUNCTION(BlueprintCallable)

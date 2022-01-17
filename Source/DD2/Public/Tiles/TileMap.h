@@ -267,8 +267,16 @@ public:
 	UFUNCTION(BlueprintCallable)
     TArray<ATileBase*> FindTilesReachable(int32 index, int32 range);
 
+	TArray<int32> FindPathRoute(int32 A, int32 B);
+	
 	UFUNCTION()
 	int32 GetDistance(int32 A, int32 B);
+
+	int32 GetTDistance(int32 B);
+
+	int32 GetFDistance(int32 A, int32 B, int32 C);
+
+	TArray<int32> SortFG(TArray<int32> indexes);
 	
 	protected:
 	// Called when the game starts or when spawned

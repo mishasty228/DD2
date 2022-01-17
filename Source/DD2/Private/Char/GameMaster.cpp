@@ -148,21 +148,31 @@ void AGameMaster::Select()
 			SelectedTile = HitActor;
 			if (AvailableTiles.Contains(HitActor))
 			{
-				CurrentCharacter->K2_TeleportTo(
-				HitActor->GetActorLocation()+FVector(0,0,20),CurrentCharacter->GetActorRotation());
-				AP-=Map->GetDistance(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind);
-				Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
-				CurrentCharacter->CurIndex= SelectedTile->TilesStruct.aind;
-				Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
-				ClearAvailable();
+				if (AP>=Map->GetTDistance( SelectedTile->TilesStruct.aind))
+				{
+					UE_LOG(LogTemp,Display,TEXT("Good"));
+					TArray<int32> Path = Map->FindPathRoute(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind);
+                    				for (int32 i : Path)
+                    				{
+                    					Map->FindTileByIndex(i)->SetMatScalarParameter("Boost", .5f);
+                    					Map->FindTileByIndex(i)->SetMatVectorParameter("Emissive", FLinearColor().Blue);
+                    				}
+				}
+				//CurrentCharacter->K2_TeleportTo(
+				//HitActor->GetActorLocation()+FVector(0,0,20),CurrentCharacter->GetActorRotation());
+				
+				//Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
+				//CurrentCharacter->CurIndex= SelectedTile->TilesStruct.aind;
+				//Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
+				//ClearAvailable();
 			}
 			if (AP <=0) SetNextChar();
-			else
+			/*else
 			{
 				UE_LOG(LogTemp, Display, TEXT("Looking For Left Tiles"));
 				AvailableTiles = Map->FindTilesReachable(CurrentCharacter->CurIndex, AP);
 				ColorAvailable();
-			}
+			}*/
 			/*if (SelectedTile->TilesStruct.Available)
 			{
 				SelectedTile->SetMatScalarParameter("Boost", .5f);
