@@ -23,6 +23,7 @@ public:
 
 	UWorld* world = GetWorld();
 
+	FTimerDelegate TimerDelegate;
 	FTimerHandle TimerHandle;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
@@ -34,18 +35,22 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	ACharBase* CurrentCharacter;
 
+	UPROPERTY(BlueprintReadOnly)
 	int32 AP=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	AGameMaster* GameMaster;
 
 	bool bCanSelect = true;
+	bool bMoving = false;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	ATileMap* Map;
 
 	UPROPERTY()
 	TArray<int32> AvailableIndexes;
+
+	TArray<int32> Path;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	ATileBase* SelectedTile;
@@ -82,6 +87,11 @@ public:
 	void SortChars();
 
 	void Select();
+	
+	UFUNCTION()
+	void Move();
+
+	void CheckLeft();
 
 	void ClearAvailable();
 	void ColorAvailable();

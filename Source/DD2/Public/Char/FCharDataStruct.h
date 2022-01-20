@@ -2,10 +2,10 @@
 
 #pragma once
 #include "CoreMinimal.h"
-#include "Tiles/TileBase.h"
+
 #include "FCharDataStruct.generated.h"
 
-class ATileBase;
+
 /**
  * 
  */
@@ -43,10 +43,7 @@ struct FCharDataStruct
  int32 AR = 1;
 
  UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
- UTexture2D* Thumbnail;
-
- UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Parameters")
- TArray<ATileBase*> TilesInActionRange;
+ UTexture2D* Thumbnail = nullptr;
  
 };
 

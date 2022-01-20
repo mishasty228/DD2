@@ -3,6 +3,8 @@
 
 #include "Char/GameMaster.h"
 
+#include <fstream>
+
 
 // Sets default values
 AGameMaster::AGameMaster()
@@ -33,7 +35,7 @@ void AGameMaster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("Mouse_Y", this, &AGameMaster::Camera_YAxis);
+	PlayerInputComponent->BindAxis("Mouse_X", this, &AGameMaster::Camera_YAxis);
 	PlayerInputComponent->BindAction("SpringUp", IE_Pressed, this, &AGameMaster::SpringUp);
 	PlayerInputComponent->BindAction("SpringDown", IE_Pressed, this, &AGameMaster::SpringDown);
 
@@ -121,6 +123,8 @@ void AGameMaster::SortChars()
 //Tile selection function
 void AGameMaster::Select()
 {
+	if (bMoving) return;
+	
 	//LineTraceParams Setup
 	FHitResult Hit = FHitResult();
 	FVector startray = FVector().ZeroVector;
@@ -143,20 +147,26 @@ void AGameMaster::Select()
 				SelectedTile->SetMatVectorParameter("Emissive", FLinearColor(1,1,1,1));
 			}
 		}
+		ColorAvailable();
 		if (HitActor)
 		{
+			if (SelectedTile==HitActor)
+			{
+				Move();
+				
+			}
 			SelectedTile = HitActor;
 			if (AvailableTiles.Contains(HitActor))
 			{
 				if (AP>=Map->GetTDistance( SelectedTile->TilesStruct.aind))
 				{
 					UE_LOG(LogTemp,Display,TEXT("Good"));
-					TArray<int32> Path = Map->FindPathRoute(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind);
-                    				for (int32 i : Path)
-                    				{
-                    					Map->FindTileByIndex(i)->SetMatScalarParameter("Boost", .5f);
-                    					Map->FindTileByIndex(i)->SetMatVectorParameter("Emissive", FLinearColor().Blue);
-                    				}
+					Path = Map->FindPathRoute(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind);
+                    for (int32 i : Path)
+                    {
+                    	Map->FindTileByIndex(i)->SetMatScalarParameter("Boost", .5f);
+                    	Map->FindTileByIndex(i)->SetMatVectorParameter("Emissive", FLinearColor().Blue);
+                    }
 				}
 				//CurrentCharacter->K2_TeleportTo(
 				//HitActor->GetActorLocation()+FVector(0,0,20),CurrentCharacter->GetActorRotation());
@@ -192,6 +202,46 @@ void AGameMaster::Select()
 		else SelectedTile = nullptr;
 	}
 	
+}
+
+void AGameMaster::Move()
+{
+	if (Path.Num()>0)
+	{
+		bMoving = true;
+		ATileBase* MoveTile = Map->FindTileByIndex(Path[0]);
+        	if (MoveTile)
+        	{
+        		Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
+        		Path.RemoveAt(0);
+        		if (MoveTile->CharInteraction(CurrentCharacter))
+        		{
+        			Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
+        		}
+        		AP--;
+        		GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::Move, 1.5f);
+        	}
+        	else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"));
+	}
+	else
+	{
+		bMoving = false;
+		CheckLeft();
+	}
+		
+}
+
+void AGameMaster::CheckLeft()
+{
+	ClearAvailable();
+	if (AP <=0) SetNextChar();
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Looking For Left Tiles"));
+		AvailableTiles = Map->FindTilesReachable(CurrentCharacter->CurIndex, AP);
+		ColorAvailable();
+	}
+	return;
 }
 
 void AGameMaster::ClearAvailable()

@@ -96,6 +96,25 @@ void ATileBase::SetMatScalarParameter(FName Name, float Value)
 	if (MIDynamic) MIDynamic->SetScalarParameterValue(Name, Value);
 }
 
+bool ATileBase::CharInteraction_Implementation(ACharBase* Char)
+{
+	switch (TilesStruct.TileType)
+	{
+	case ETT_Path:
+	case ETT_Door:
+	case ETT_Room:
+	case ETT_Spawn:
+	case ETT_Portal:
+	case ETT_Trap:
+		Char->CurIndex= this->TilesStruct.aind;
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}
+
 void ATileBase::SetMatVectorParameter(FName Name, FLinearColor Value)
 {
 	if (MIDynamic) MIDynamic->SetVectorParameterValue(Name,Value);

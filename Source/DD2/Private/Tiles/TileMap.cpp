@@ -66,7 +66,7 @@ void ATileMap::SpawnEveryIndex()
 				{
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					TilesStruct.Available = false;
+					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -79,7 +79,7 @@ void ATileMap::SpawnEveryIndex()
 				{
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDoor,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					TilesStruct.Available = false;
+					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -106,7 +106,7 @@ void ATileMap::SpawnEveryIndex()
 				{
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileSpawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					TilesStruct.Available = false;
+					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -119,7 +119,7 @@ void ATileMap::SpawnEveryIndex()
 				{
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDespawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					TilesStruct.Available = false;
+					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -158,7 +158,7 @@ void ATileMap::SpawnEveryIndex()
 				{
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileKey,
 					spawnLocation, rotator,	FActorSpawnParameters());
-					TilesStruct.Available = false;
+					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -329,17 +329,20 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 
 	int32 CurIndex = A;
 
-	ATileBase* CurTile = FindTileByIndex(A);
+	ATileBase* CurTile = FindTileByIndex(CurIndex);
+	CurTile->G = 0;
 	CurTile->H = GetDistance(CurIndex, B);
-
+	CurTile->F = GetFDistance(A,CurIndex,B);
 	openPath.Add(CurIndex);
 	while (openPath.Num() != 0)
 	{
 		openPath = SortFG(openPath);
 		CurIndex = openPath[0];
+		CurTile = FindTileByIndex(CurIndex);
 		openPath.Remove(CurIndex);
 		closedPath.Add(CurIndex);
-		UE_LOG(LogTemp,Display,TEXT("Added index %i to closedPath"), CurIndex);
+		UE_LOG(LogTemp,Display,TEXT("Added index %i to closedPath with G %i, H %i, F %i"), CurIndex, CurTile->G,
+						CurTile->H, CurTile->F);
 		
 		int32 g = FindTileByIndex(CurIndex)->G + 1;
 
@@ -354,7 +357,7 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 			ATileBase* CheckTile = FindTileByIndex(adTile);
 			if (CheckTile)
 			{
-				if (CheckTile->TilesStruct.Available == false)
+				if (!CheckTile->TilesStruct.Available)
 				{
 					continue;
 				}
@@ -364,15 +367,17 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 				}
 				if (!openPath.Contains(adTile))
 				{
-					CheckTile->G = GetDistance(A, adTile);
+					CheckTile->G = g;
 					CheckTile->H = GetDistance(adTile, B);
-					CheckTile->F = CheckTile->G + CheckTile->H;
+					CheckTile->F = GetFDistance(A,adTile,B);
 					openPath.Add(adTile);
-					UE_LOG(LogTemp,Display,TEXT("Added index %i to openPath"), adTile);
+					UE_LOG(LogTemp,Display,TEXT("Added index %i to openPath with G %i, H %i, F %i"), adTile, CheckTile->G,
+						CheckTile->H, CheckTile->F);
 				}
 				else if (CheckTile->F > g + CheckTile->H)
 				{
-					CheckTile->G = g;
+					CheckTile->G = GetDistance(A,adTile);
+					UE_LOG(LogTemp,Display, TEXT("F>g+H so g = G"));
 				}
 			}
 		}
@@ -381,8 +386,9 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 	if (closedPath.Contains(B))
 	{
 		CurIndex = B;
+		UE_LOG(LogTemp, Display, TEXT("B index is %i"), CurIndex);
 		Path.Add(CurIndex);
-		for (int32 i = FindTileByIndex(B)->G; i >= 0; i--)
+		for (int32 i = FindTileByIndex(B)->G-1; i >= 0; i--)
 		{
 			for (FVector2D dir : NeighsIndexes)
 			{
@@ -398,7 +404,13 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 			}
 		}
 	}
-
+	
+	for (int32 i = 0; i < Path.Num()/2; i++)
+	{
+		Path.Swap(i,Path.Num()-1-i);
+	}
+	Path.RemoveAt(0);
+	for (int32 i : Path) UE_LOG(LogTemp,Display,TEXT("%i "),i) ;
 	return Path;
 }
 

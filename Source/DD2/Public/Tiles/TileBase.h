@@ -4,13 +4,14 @@
 
 
 #include "TilesStruct.h"
+#include "Char/CharBase.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/Actor.h"
 #include "TileBase.generated.h"
 
-class ACharBase;
+
 class ATileMap;
 struct FCharDataStruct;
 
@@ -62,7 +63,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileCoordinates");
 	FVector2D HexCoordinates = FVector2D().ZeroVector;
 
-	
+	UPROPERTY(BlueprintReadOnly)
 	int32 Distance = 0;
 	int32 G = 0;
 	int32 H = 0;
@@ -107,6 +108,8 @@ public:
 		SetMatVectorParameter("Emissive", FLinearColor(1,1,1,1));
 	}
 
+	UFUNCTION (BlueprintCallable, BlueprintNativeEvent)
+	bool CharInteraction(ACharBase* Char);
 	
 	UFUNCTION()
 	void ResetParams()
