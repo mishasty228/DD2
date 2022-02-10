@@ -168,36 +168,9 @@ void AGameMaster::Select()
                     	Map->FindTileByIndex(i)->SetMatVectorParameter("Emissive", FLinearColor().Blue);
                     }
 				}
-				//CurrentCharacter->K2_TeleportTo(
-				//HitActor->GetActorLocation()+FVector(0,0,20),CurrentCharacter->GetActorRotation());
 				
-				//Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
-				//CurrentCharacter->CurIndex= SelectedTile->TilesStruct.aind;
-				//Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
-				//ClearAvailable();
 			}
 			if (AP <=0) SetNextChar();
-			/*else
-			{
-				UE_LOG(LogTemp, Display, TEXT("Looking For Left Tiles"));
-				AvailableTiles = Map->FindTilesReachable(CurrentCharacter->CurIndex, AP);
-				ColorAvailable();
-			}*/
-			/*if (SelectedTile->TilesStruct.Available)
-			{
-				SelectedTile->SetMatScalarParameter("Boost", .5f);
-				SelectedTile->SetMatVectorParameter("Emissive", FLinearColor().Blue);
-			}
-			else
-			{
-				SelectedTile->SetMatScalarParameter("Boost", .5f);
-				SelectedTile->SetMatVectorParameter("Emissive", FLinearColor().Red);
-			}
-			if (SelectedTile->TilesStruct.aind==CurrentCharacter->CurIndex)
-            {
-            	SelectedTile->SetMatScalarParameter("Boost", .5f);
-            	SelectedTile->SetMatVectorParameter("Emissive", FLinearColor().Yellow);
-            }*/ //Can be good on hover tile
 		}
 		else SelectedTile = nullptr;
 	}

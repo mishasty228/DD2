@@ -22,7 +22,6 @@ ATileMap::ATileMap()
 void ATileMap::DunGenMain()
 {
 	RandStreamGen();
-	//minRoomSizeDefault = minRoomSize;
 	prevLocation = FVector2D(worldSize/2);
 	GenerateAllIndexes();
 	TempArraysSetup();
@@ -611,56 +610,6 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 		default:
 			break;
 		}
-		
-		/*if (TempRoom.RoomType == ERT_SpawnRoom)//roomnum<roomAmount-despawnAmount&&RandStream.GetFraction()<0.5)
-			{
-			int32 selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-			TileTypesTemp[selIndex]=ETT_Spawn;
-			TempRoom.WayTilesArray.Remove(selIndex);
-			spawnCount++;
-			spawned = true;
-			/*if((j>start+1&&j<end-2)&&(i>startX+1&&i<startX+size*2-3))
-			{
-				if (RandStream.GetFraction()<0.2&&!spawned&&spawnCount<spawnAmount)
-				{
-					TileTypesTemp[tileIndex]=ETT_Spawn;
-					spawned = true;
-					//UE_LOG(LogTemp, Warning, TEXT("Spawner placed at %d, %d"), i-startX, j-start);
-				}
-			}*
-			}
-		else if (TempRoom.RoomType==ERT_PortalRoom)//roomnum>=roomAmount-despawnAmount)
-			{
-			int32 selIndex = CoordToIndex(TempRoom.start + (TempRoom.size-1)*NeighsIndexes[3]);
-			TileTypesTemp[selIndex]=ETT_Portal;
-			TempRoom.WayTilesArray.Remove(selIndex);
-			despawnCount++;
-			spawned = true;
-			/*if((j==end-size)&&(i==startX+size-1))
-			{
-				if (RandStream.GetFraction()<0.9&&!spawned&&despawnCount<despawnAmount)
-				{
-					TileTypesTemp[tileIndex]=ETT_Portal;
-					spawned = true;
-					//UE_LOG(LogTemp, Warning, TEXT("Despawner placed at  %d, %d"), i-startX, j-start);
-				}
-			}*
-			}
-		else if (TempRoom.RoomType==ERT_EnemyRoom)
-			{
-			for (int32 i = 0; i < TempRoom.Enemies; i++)
-				{
-					int32 selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-					TileTypesTemp[selIndex] = ETT_EnemySpawn;
-					TempRoom.WayTilesArray.Remove(selIndex);
-				}
-			}
-		*/
-		/*if (spawned)
-		{
-			if (RoomType==ERT_SpawnRoom) spawnCount++;
-			else if (RoomType==ERT_PortalRoom) despawnCount++;
-		}*/
 		if (TempRoom.RoomType!=ERT_ChestRoom && TempRoom.RoomType!=ERT_ShopRoom) TileRooms.Add(TempRoom);
 		direction = RandomOdd(0,TempRoom.cornerInd.Num()-1);
 	}
@@ -697,7 +646,6 @@ bool ATileMap::GenerateCorridor(int32 size)
 	{
 		floors.Add(CoordToIndex(startpoint+NeighsIndexes[(dir+2*i)%6]));
 	}
-	//for(int32 j = 0; j<=1; j++) walls[j] = CoordToIndex(IndexToCoord(walls[j])+NeighsIndexes[dir]);
 	
 	int32 curIndex = CoordToIndex(startpoint);
 	const int32 length = maxRoomSize*2-TileRooms[startRoom].size-size;
@@ -760,90 +708,52 @@ void ATileMap::FindOptionalCorridors()
 	{
 		FRoomStruct A = TileRooms[i];
 		for (int32 j = i+1; j < TileRooms.Num()-1; j++)
-		{
-			//UE_LOG(LogTemp, Display, TEXT("Rooms %i and %i"), i, j);
-			
+		{			
 			FRoomStruct B = TileRooms[j];
 
 			FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
-			//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
 			
 			//Directions 0 and 3 WORKS CORRECTLY
 			if (((A.start+(A.size-1)).X - (A.start+(A.size-1)).Y == (B.start+(B.size-1)).X - (B.start+(B.size-1)).Y))
 			{
-				//FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
 				int32 len = res.Size();
-				//UE_LOG(LogTemp, Display, TEXT("XYDistance between rooms %i and %i is %i "), i, j , len);
-				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
 				
-				//if (len<maxRoomSize*3)
-				//{
 				if (res < FVector2D().ZeroVector && TileTypes[A.cornerInd[0]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[0],B.cornerInd[3],0);
-					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 0"), i, j);
-					TileTypes[A.cornerInd[0]]= ETT_Door;
-					TileTypes[B.cornerInd[3]]= ETT_Door;*/
 				}
 				if (res > FVector2D().ZeroVector && TileTypes[A.cornerInd[3]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[3],B.cornerInd[0],3);
-					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 3"), i, j);
-					TileTypes[B.cornerInd[0]]= ETT_Door;
-					//TileTypes[A.cornerInd[3]]= ETT_Door;*/
 				}
-				//}
 			}
-			
 			//Directions 2 and 5 WORKS CORRECTLY
 			else if ((A.start+(A.size-1)).X == (B.start+(B.size-1)).X)
 			{
-				//FVector2D res = (B.start+(B.size-1))-(A.start+(A.size-1));
 				int32 len = res.Size();
-				//UE_LOG(LogTemp, Display, TEXT("XDistance between rooms %i and %i is %i"), i, j , len);
-				
-				//if (len<maxRoomSize*3)
-				//{
+
 				if (res.Y > 0 && TileTypes[A.cornerInd[2]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[2],B.cornerInd[5],2);
-					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 2"), i, j);
-					TileTypes[A.cornerInd[2]]= ETT_Door;
-					TileTypes[B.cornerInd[5]]= ETT_Door;*/
 				}
 				if (res.Y < 0 && TileTypes[A.cornerInd[5]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[5],B.cornerInd[2],5);
-					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 5"), i, j);
-					TileTypes[A.cornerInd[5]]= ETT_Door;
-					TileTypes[B.cornerInd[2]]= ETT_Door;*/
 				}
-				//}
 			}
-			
 			//Directions 1 and 4 WORKS CORRECTLY
 			else if ((A.start+(A.size-1)).Y == (B.start+(B.size-1)).Y)
 			{
 				int32 len = res.Size();
-				//UE_LOG(LogTemp, Display, TEXT("YDistance between rooms %i and %i is %i"), i, j , len);
-				//UE_LOG(LogTemp, Display, TEXT("Res vector is %f and %f "), res.X, res.Y);
-				//if (len<maxRoomSize*3)
-				//{
+
 				if (res.X < 0 && TileTypes[A.cornerInd[1]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[1],B.cornerInd[4],1);
-					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 1"), i, j);
-					TileTypes[A.cornerInd[1]]= ETT_Door;
-					TileTypes[B.cornerInd[4]]= ETT_Door;*/
 				}
 				if (res.X > 0 && TileTypes[A.cornerInd[4]]!=ETT_Door && RandStream.GetFraction()<optionalChance)
 				{
 					DoOptionalCorridors(A.cornerInd[4],B.cornerInd[1],4);
-					/*UE_LOG(LogTemp, Display, TEXT("Room %i can be connected with Room %i at corner 4"), i, j);
-					TileTypes[A.cornerInd[4]]= ETT_Door;
-					TileTypes[B.cornerInd[1]]= ETT_Door;*/
 				}
-				//}
 			}
 		}
 	}
