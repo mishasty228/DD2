@@ -202,7 +202,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
 	TSubclassOf<class ATileBase> TileDoor;
 
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileWall;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")
+	TSubclassOf<class ATileBase> TileBlock;
 
 	//Functions
 
@@ -220,9 +224,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RandStreamGen();
-
-
-
+	
 	UFUNCTION(BlueprintCallable)
 	bool GenerateRoom(int32 roomnum, int32 size=0, TEnumAsByte<ERoomTypes> RoomType = ERT_EnemyRoom);
 
@@ -237,6 +239,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	bool GenerateCorridor(int32 size);
+
+	UFUNCTION(BlueprintCallable)
+	FRotator CheckWallRotation(int32 Index);
 
 	//Tile Functions
 
@@ -281,9 +286,5 @@ public:
 	protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };

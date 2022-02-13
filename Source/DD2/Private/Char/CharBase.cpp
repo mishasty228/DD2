@@ -9,7 +9,8 @@ ACharBase::ACharBase()
 	CharDataComponent = CreateDefaultSubobject<UCharDataComponent>("CharDataComponent");
 	this->AddOwnedComponent(CharDataComponent);
 	
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this character to call Tick() every frame.
+ 	// You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Scene = CreateDefaultSubobject<USceneComponent>("Scene");
 	Scene->SetupAttachment(this->GetMesh());
@@ -33,12 +34,6 @@ void ACharBase::BeginPlay()
 	
 }
 
-// Called every frame
-void ACharBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 // Called to bind functionality to input
 void ACharBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

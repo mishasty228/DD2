@@ -38,6 +38,9 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
 	USceneComponent* Scene;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Components")
+	UStaticMeshComponent* AdditionalMesh;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Tiles")
 	ACharBase* CharacterOnTile;

@@ -10,7 +10,7 @@
 ATileBase::ATileBase()
 {
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-
+	AdditionalMesh = CreateDefaultSubobject<UStaticMeshComponent>("AddMesh");
 	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	Scene = CreateDefaultSubobject<USceneComponent>("Scene");
@@ -19,7 +19,9 @@ ATileBase::ATileBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = Mesh;
-	
+
+	AdditionalMesh->SetupAttachment(Mesh);
+	AdditionalMesh->SetRelativeLocation(FVector(0,0,0));
 	Sphere->SetupAttachment(Mesh);
 	Sphere->SetRelativeLocation(FVector(0,0,0));
 	Scene->SetupAttachment(Mesh);

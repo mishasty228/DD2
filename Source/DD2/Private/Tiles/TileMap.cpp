@@ -16,12 +16,13 @@ ATileMap::ATileMap()
 	PrimaryActorTick.bCanEverTick = true;
 	spawnLocation = this->GetActorLocation();
 
-
+	
 }
 
 void ATileMap::DunGenMain()
 {
 	RandStreamGen();
+	UE_LOG(LogTemp, Display, TEXT("Seed is %i"), seed);
 	prevLocation = FVector2D(worldSize/2);
 	GenerateAllIndexes();
 	TempArraysSetup();
@@ -44,7 +45,7 @@ void ATileMap::SpawnEveryIndex()
 			posY = j;
 			spawnLocation = this->GetActorLocation();
 			spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
-			FTilesStruct TilesStruct = FTilesStruct(i,j,i-j, CoordToIndex(FVector2D(i,j)));
+			const FTilesStruct TilesStruct = FTilesStruct(i,j,i-j, CoordToIndex(FVector2D(i,j)));
 			switch (TileTypes[i*worldSize+j])
 			{
 			case ETT_Room:
@@ -87,11 +88,24 @@ void ATileMap::SpawnEveryIndex()
 				}
 				break;
 			case ETT_Block:
-			case ETT_Wall:
-				if(TileBase)
+				if(TileBlock)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBlock,
 					spawnLocation, rotator,	FActorSpawnParameters());
+					TilesStruct.Available = false;
+					TilesStruct.TileType = TileTypes[i*worldSize+j];
+					CurTile->TilesStruct = TilesStruct;
+					Tiles.Add(CurTile);
+					CurTile->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepWorld,
+					true));
+				}
+				break;
+			case ETT_Wall:
+				if(TileWall)
+				{
+					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileWall,
+					spawnLocation, rotator,	FActorSpawnParameters());
+					CurTile->AdditionalMesh->AddWorldRotation(CheckWallRotation(i*worldSize+j));
 					TilesStruct.Available = false;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
@@ -267,7 +281,7 @@ TArray<ATileBase*> ATileMap::FindTilesInRange(int32 index, int32 range)
 {
 	TArray<ATileBase*> Result;
 	int32 dif = 0;
-	FVector2D Start = IndexToCoord(index);
+	const FVector2D Start = IndexToCoord(index);
 	UE_LOG(LogTemp, Display, TEXT("Range %i"), range);
 	for (int32 j = Start.X-range; j <= Start.X+range; j++, dif++)
 	{
@@ -289,24 +303,23 @@ TArray<ATileBase*> ATileMap::FindTilesReachable(int32 index, int32 range)
 	TArray<int32> Visited;
 	TArray<int32> LastRun;
 	TArray<int32> CurRun;
-	int32 start = index;
-	ATileBase* CheckTile; 
-	
+	const int32 start = index;
+
 	Visited.Add(start);
 	Result.Add(FindTileByIndex(start));
 	LastRun.Add(start);
 	
 	for (int32 k = 1; k <= range; k++)
 	{
-		for (int32 i : LastRun)
+		for (const int32 i : LastRun)
 		{
 			for (FVector2D N : NeighsIndexes)
 			{
 				int32 curInd = CoordToIndex(IndexToCoord(i)+N);
-				CheckTile = FindTileByIndex(curInd);
+				ATileBase* CheckTile = FindTileByIndex(curInd);
 				if (CheckTile && !Visited.Contains(curInd) && CheckTile->TilesStruct.Available)
 				{
-					//UE_LOG(LogTemp,Display,TEXT("Found available nonvisited tile"));
+					//UE_LOG(LogTemp,Display,TEXT("Found available non-visited tile"));
 					CheckTile->Distance=k;
 					CurRun.Add(curInd);
 					Visited.Add(curInd);
@@ -342,8 +355,8 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 		closedPath.Add(CurIndex);
 		UE_LOG(LogTemp,Display,TEXT("Added index %i to closedPath with G %i, H %i, F %i"), CurIndex, CurTile->G,
 						CurTile->H, CurTile->F);
-		
-		int32 g = FindTileByIndex(CurIndex)->G + 1;
+
+		const int32 g = FindTileByIndex(CurIndex)->G + 1;
 
 		if (closedPath.Contains(B))
 		{
@@ -392,7 +405,7 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 			for (FVector2D dir : NeighsIndexes)
 			{
 				int32 adTile = CoordToIndex(IndexToCoord(CurIndex) + dir);
-				ATileBase* CheckTile = FindTileByIndex(adTile);
+				const ATileBase* CheckTile = FindTileByIndex(adTile);
 				if (CheckTile->G == i && closedPath.Contains(adTile))
 				{
 					UE_LOG(LogTemp, Display, TEXT("Path index is %i"), CurIndex);
@@ -415,8 +428,8 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 
 int32 ATileMap::GetDistance(int32 A, int32 B)
 {
-	int32 dR = (IndexToCoord(B).X-IndexToCoord(A).X);
-	int32 dQ = (IndexToCoord(B).Y-IndexToCoord(A).Y);
+	const int32 dR = (IndexToCoord(B).X-IndexToCoord(A).X);
+	const int32 dQ = (IndexToCoord(B).Y-IndexToCoord(A).Y);
 	if (dR*dQ<0) return (FMath::Abs(dR)+FMath::Abs(dQ));
 	return FMath::Max(FMath::Abs(dR),FMath::Abs(dQ));
 }
@@ -694,6 +707,57 @@ bool ATileMap::GenerateCorridor(int32 size)
 	return success;
 }
 
+FRotator ATileMap::CheckWallRotation(int32 Index)
+{
+	FRotator Rotation = FRotator().ZeroRotator;
+	const FVector2D coord = IndexToCoord(Index);
+	//UE_LOG(LogTemp, Display, TEXT("Index is %i Coord is %f %f"), Index, coord.X, coord.Y);
+	//UE_LOG(LogTemp, Display, TEXT("Max %i"), std::size(NeighsIndexes));
+	for (int32 i = 0; i < std::size(NeighsIndexes);i++)
+	{
+		//UE_LOG(LogTemp, Display, TEXT("Check %i"), i);
+		const int32 CheckA = CoordToIndex(coord+NeighsIndexes[i]);
+		//UE_LOG(LogTemp, Display, TEXT("Index is %i"), CheckA);
+		if (TileTypes[CheckA]==ETT_Room)
+        {
+			//UE_LOG(LogTemp, Display, TEXT("SideA is %i"), i);
+			if (TileTypes[CoordToIndex(coord+NeighsIndexes[(6+i+1)%6])]==ETT_Room)
+			{
+				//UE_LOG(LogTemp, Display, TEXT("SideB is %i"), (i+1)%6);
+				Rotation = FRotator(0,(-((i)%6)*60),0);
+				break;
+			}
+			if (TileTypes[CoordToIndex(coord+NeighsIndexes[(6+i-1)%6])]==ETT_Room)
+			{
+				//UE_LOG(LogTemp, Display, TEXT("SideB is %i"), (6+i-1)%6);
+				Rotation = FRotator(0,(-((6+i-1)%6)*60),0);
+				break;
+			}
+			Rotation = FRotator(0,i*-60,0);
+			break;
+		}
+		if ( TileTypes[CheckA]==ETT_Path)
+		{
+			//UE_LOG(LogTemp, Display, TEXT("SideA is %i"), i);
+			if (TileTypes[CoordToIndex(coord+NeighsIndexes[(6+i+1)%6])]==ETT_Path )
+			{
+				//UE_LOG(LogTemp, Display, TEXT("SideB is %i"), (i+1)%6);
+				Rotation = FRotator(0,(-((i)%6)*60),0);
+				break;
+			}
+			if (TileTypes[CoordToIndex(coord+NeighsIndexes[(6+i-1)%6])]==ETT_Path)
+			{
+				//UE_LOG(LogTemp, Display, TEXT("SideB is %i"), (6+i-1)%6);
+				Rotation = FRotator(0,(-((6+i-1)%6)*60),0);
+				break;
+			}
+			Rotation = FRotator(0,i*-60,0);
+			break;
+		}
+	}
+	return Rotation;
+}
+
 int32 ATileMap::RandomOdd(int32 Min, int32 Max)
 {
 	int32 result = RandStream.FRandRange(Min,Max);
@@ -761,10 +825,9 @@ void ATileMap::FindOptionalCorridors()
 
 bool ATileMap::CheckSpawnDespawn()
 {
-	bool allSet = true;
+	bool allSet = false;
 	//UE_LOG(LogTemp, Warning, TEXT("Spawns places: %d, despawns placed %d"), spawnCount, despawnCount);
 	if (spawnCount>=spawnAmount&&despawnCount>=despawnAmount) allSet=true;
-	else allSet=false;
 	spawnCount=0;
 	despawnCount=0;
 	return allSet;
@@ -811,7 +874,7 @@ void ATileMap::RoomCorCycle()
 		TileTypesTemp.Empty();
 		TileRooms.Empty();
 		TileTypesTemp.Append(TileTypesTempBackup);
-		for (; roomToSpawn<roomAmount;)
+		while (roomToSpawn<roomAmount)
 		{
 			/////////////////////////
 			/////////////////////////
@@ -892,10 +955,11 @@ void ATileMap::RoomCorCycle()
 		}
 		//Else
 		seed = 0;
-		TempArraysSetup();
+		//TempArraysSetup();
+		GenerateAllIndexes();
 		RandStreamGen();
 		UE_LOG(LogTemp,Error, TEXT("Trying to generate another map with seed %d"), seed);
-		//GenerateAllIndexes();
+		
 	}
 }
 
@@ -958,11 +1022,5 @@ void ATileMap::BeginPlay()
 		UE_LOG(LogTemp, Display, TEXT("Found Map"));
 	}
 
-}
-
-// Called every frame
-void ATileMap::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 

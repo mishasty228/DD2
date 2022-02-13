@@ -23,12 +23,7 @@ void AGameMaster::BeginPlay()
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::SumHeroesUp, 1.0f);
 }
 
-// Called every frame
-void AGameMaster::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 
-}
 
 // Called to bind functionality to input
 void AGameMaster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
