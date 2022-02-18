@@ -37,6 +37,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 CurIndex=0;
+
 	
 
 protected:

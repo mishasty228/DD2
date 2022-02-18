@@ -170,7 +170,7 @@ void AGameMaster::Select()
 		else SelectedTile = nullptr;
 	}
 	
-}
+} 
 
 void AGameMaster::Move()
 {
