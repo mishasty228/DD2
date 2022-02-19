@@ -111,3 +111,19 @@ void ALivingBeing::Interact()
 {
 }
 
+void ALivingBeing::SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, int32 df,
+	float dr, float fr, float ir, float pr, float br, float sr)
+{
+	HealthPoints = hp;
+	DamagePoints = dp;
+	ActionPoints = ap;
+	SpeedPoints = sp;
+	DefensePoints = df;
+	DamageResist = dr;
+	FireResist = fr;
+	IceResist = ir;
+	PoiseResist = pr;
+	BleedResist = br;
+	StunResist = sr;
+}
+

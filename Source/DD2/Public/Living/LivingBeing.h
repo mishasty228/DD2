@@ -36,9 +36,6 @@ public:
 	TArray<FAction> Actions;
 
 	UPROPERTY(BlueprintReadWrite,Category="LivingBeing")
-	FAction SelectedAction;
-
-	UPROPERTY(BlueprintReadWrite,Category="LivingBeing")
 	TArray<FActionEffect> Effects = {FActionEffect(EET_None, 0, 0),
 										FActionEffect(EET_Bleed, 0, 0),
 										FActionEffect(EET_Flame, 0, 0),
@@ -106,4 +103,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Interact();
+
+	UFUNCTION(BlueprintCallable)
+	void SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, int32 df,
+		float dr, float fr, float ir, float pr, float br, float sr);
 };

@@ -9,13 +9,14 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Living/LivingBeing.h"
 #include "CharBase.generated.h"
 
 class ADD2PlayerController;
 class ATileBase;
 
 UCLASS()
-class DD2_API ACharBase : public ACharacter
+class DD2_API ACharBase : public ALivingBeing
 {
 	GENERATED_BODY()
 
@@ -31,14 +32,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
 	UCameraComponent* Camera;
-	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	UCharDataComponent* CharDataComponent;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 CurIndex=0;
 
-	
+	TEnumAsByte<ECharType> HeroType = ECT_Knight;
 
 protected:
 	// Called when the game starts or when spawned
@@ -48,4 +46,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void InitializeHero();
 };
+
+

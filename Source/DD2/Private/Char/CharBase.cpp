@@ -5,10 +5,7 @@
 
 // Sets default values
 ACharBase::ACharBase()
-{
-	CharDataComponent = CreateDefaultSubobject<UCharDataComponent>("CharDataComponent");
-	this->AddOwnedComponent(CharDataComponent);
-	
+{	
  	// Set this character to call Tick() every frame.
  	// You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -17,14 +14,14 @@ ACharBase::ACharBase()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArm->SetupAttachment(GetCapsuleComponent());
-	SpringArm->TargetArmLength = 500;
+	SpringArm->TargetArmLength = 1500;
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->SetRelativeRotation(FRotator(-45.0f, 60.0f, 0.0f));
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
 
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -39,6 +36,18 @@ void ACharBase::BeginPlay()
 void ACharBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ACharBase::InitializeHero()
+{
+	switch (HeroType)
+	{
+	case ECT_Knight:
+		
+		break;
+	default: break;
+	}
+	
 }
 
 

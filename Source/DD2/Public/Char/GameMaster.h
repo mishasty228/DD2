@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DD2PlayerController.h"
+#include "FAction.h"
 #include "GameFramework/Character.h"
 #include "Tiles/TileMap.h"
 #include "Char/CharBase.h"
@@ -35,6 +36,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	ACharBase* CurrentCharacter;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FAction SelectedAction;
+	
 	UPROPERTY(BlueprintReadOnly)
 	int32 AP=0;
 
