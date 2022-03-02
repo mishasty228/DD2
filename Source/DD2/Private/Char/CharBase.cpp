@@ -38,16 +38,81 @@ void ACharBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ACharBase::InitializeHero()
+void ACharBase::InitializeHero(TEnumAsByte<ECharType> Type)
 {
+	HeroType = Type;
 	switch (HeroType)
 	{
 	case ECT_Knight:
-		
+		SetParameters(
+		RandomStream.RandRange(33,38),
+		RandomStream.RandRange(12,15),
+		RandomStream.RandRange(3,5),
+		RandomStream.RandRange(10,15),
+		0.2f,
+		0.05f,
+		0.2f,
+		0.2f,
+		0.2f,
+		0.3f,
+		0.5f
+		);
 		break;
-	default: break;
+		
+	case ECT_Spearman:
+		SetParameters(
+		RandomStream.RandRange(29,34),
+		RandomStream.RandRange(10,13),
+		RandomStream.RandRange(4,6),
+		RandomStream.RandRange(10,15),
+		0.15f,
+		0.1f,
+		0.15f,
+		0.15f,
+		0.2f,
+		0.2f,
+		0.3f
+		);
+		break;
+
+	case ECT_Archer:
+		SetParameters(
+		RandomStream.RandRange(20,25),
+		RandomStream.RandRange(5,8),
+		RandomStream.RandRange(5,7),
+		RandomStream.RandRange(10,15),
+		0.1f,
+		0.2f,
+		0.2f,
+		0.2f,
+		0.2f,
+		0.3f,
+		0.1f
+		);
+		break;
+		
+	default:
+		SetParameters(
+		RandomStream.RandRange(30,35),
+		RandomStream.RandRange(10,15),
+		RandomStream.RandRange(3,7),
+		RandomStream.RandRange(10,15),
+		0.2f,
+		0.2f,
+		0.2f,
+		0.2f,
+		0.2f,
+		0.2f,
+		0.2f
+		);
+		break;
 	}
 	
+}
+
+void ACharBase::Move()
+{
+	Super::Move();
 }
 
 

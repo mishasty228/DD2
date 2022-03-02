@@ -34,11 +34,17 @@ void AGameMaster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("SpringUp", IE_Pressed, this, &AGameMaster::SpringUp);
 	PlayerInputComponent->BindAction("SpringDown", IE_Pressed, this, &AGameMaster::SpringDown);
 
-	PlayerInputComponent->BindAction("Select", IE_Pressed, this, &AGameMaster::Select);
+	PlayerInputComponent->BindAction("Select", IE_Pressed, this, &AGameMaster::SelectTile);
 	PlayerInputComponent->BindAction("NextChar", IE_Pressed, this, &AGameMaster::SetNextChar);
 	
 	PlayerInputComponent->BindAction("CameraRotation", IE_Pressed, this, &AGameMaster::SetCanRotateTrue);
 	PlayerInputComponent->BindAction("CameraRotation", IE_Released, this, &AGameMaster::SetCanRotateFalse);
+}
+
+void AGameMaster::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	Select();
 }
 
 void AGameMaster::SetNextChar()
@@ -59,7 +65,7 @@ void AGameMaster::SetNextChar()
 			
 			
 			CurrentCharacter = CharactersForTurn[0];
-			AP = CurrentCharacter->CharDataComponent->CharData.AP;
+			AP = CurrentCharacter->ActionPoints;
 			Tile = Map->FindTileByIndex(CurrentCharacter->CurIndex);
 			if (Tile)
 			{
@@ -68,7 +74,7 @@ void AGameMaster::SetNextChar()
 			}
 			PlayerController->SetViewTargetWithBlend(CurrentCharacter, 1.f);
 			UE_LOG(LogTemp, Display, TEXT("%s character with speed %d"),
-				*CurrentCharacter->CharDataComponent->CharData.Name, CurrentCharacter->CharDataComponent->CharData.SPD);
+				*CurrentCharacter->Name, CurrentCharacter->SpeedPoints);
 			CharactersForTurn.RemoveAt(0);
 			AvailableTiles = Map->FindTilesReachable(CurrentCharacter->CurIndex, AP);
 			ColorAvailable();
@@ -80,6 +86,36 @@ void AGameMaster::SetNextChar()
 		}
 	}
 	return;
+}
+
+void AGameMaster::SelectTile()
+{
+	const int32 index=SelectedTile->TilesStruct.aind;
+	const ATileBase* Tile = Map->FindTileByIndex(index);
+	if (Tile)
+	{
+		if (Tile->TilesStruct.TileType==ETT_Room || Tile->TilesStruct.TileType==ETT_Path ||
+			Tile->TilesStruct.TileType==ETT_Trap )
+		{
+			Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
+			Path.RemoveAt(0);
+		}
+		else if (Tile->TilesStruct.TileType==ETT_Chest || Tile->TilesStruct.TileType==ETT_Door ||
+			Tile->TilesStruct.TileType==ETT_Key || Tile->TilesStruct.TileType==ETT_Portal ||
+			Tile->TilesStruct.TileType==ETT_Shop)
+		{
+			Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
+			Path.RemoveAt(0);
+			Path.RemoveAt(Path.Num()-1);
+		}
+		Move();
+	}
+	 
+}
+
+void AGameMaster::SelectAction(FAction Action)
+{
+	
 }
 
 
@@ -99,7 +135,7 @@ void AGameMaster::SortChars()
 			bool swapped = false;
 			for (int32 j = Characters.Num()-1; j > i; j--)
 			{
-				if (Characters[j-1]->CharDataComponent->CharData.SPD<Characters[j]->CharDataComponent->CharData.SPD)
+				if (Characters[j-1]->SpeedPoints<Characters[j]->SpeedPoints)
 				{
 					Characters.Swap(j,j-1);
 					swapped = true;
@@ -107,9 +143,9 @@ void AGameMaster::SortChars()
 			}
 			if (!swapped) break;
 		}
-		for (ACharBase* Char : Characters)
+		for (const ACharBase* Char : Characters)
 		{
-			UE_LOG(LogTemp, Display, TEXT("%s has speed %d"), *Char->CharDataComponent->CharData.Name, Char->CharDataComponent->CharData.SPD);
+			UE_LOG(LogTemp, Display, TEXT("%s has speed %d"), *Char->Name, Char->SpeedPoints);
 		}
 	}
 }
@@ -119,7 +155,6 @@ void AGameMaster::SortChars()
 void AGameMaster::Select()
 {
 	if (bMoving) return;
-	
 	//LineTraceParams Setup
 	FHitResult Hit = FHitResult();
 	FVector startray = FVector().ZeroVector;
@@ -145,11 +180,11 @@ void AGameMaster::Select()
 		ColorAvailable();
 		if (HitActor)
 		{
-			if (SelectedTile==HitActor)
+			/* (SelectedTile==HitActor)
 			{
 				Move();
-				
 			}
+			*/
 			SelectedTile = HitActor;
 			if (AvailableTiles.Contains(HitActor))
 			{
@@ -165,11 +200,10 @@ void AGameMaster::Select()
 				}
 				
 			}
-			if (AP <=0) SetNextChar();
+			
 		}
 		else SelectedTile = nullptr;
 	}
-	
 } 
 
 void AGameMaster::Move()
@@ -181,7 +215,6 @@ void AGameMaster::Move()
         	if (MoveTile)
         	{
         		Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
-        		Path.RemoveAt(0);
         		if (MoveTile->CharInteraction(CurrentCharacter))
         		{
         			Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;

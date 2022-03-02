@@ -19,8 +19,6 @@ struct FTilesStruct
 	
 	explicit FORCEINLINE FTilesStruct(FVector Loc, bool BAvailable, bool BVisited);
 	explicit FORCEINLINE FTilesStruct(int32 R, int32 Q, int32 S, int32 Ind);
-
-	
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 r = 0;
@@ -42,6 +40,8 @@ struct FTilesStruct
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	mutable bool Visited = false;
+
+	
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	mutable TEnumAsByte<ETileType> TileType = ETT_Path;

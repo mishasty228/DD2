@@ -97,29 +97,33 @@ void ALivingBeing::CheckEffects()
 
 void ALivingBeing::Move()
 {
+	
 }
 
 void ALivingBeing::DoAction()
 {
+	
 }
 
 void ALivingBeing::SelectAction()
 {
+	
 }
 
 void ALivingBeing::Interact()
 {
+	
 }
 
-void ALivingBeing::SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, int32 df,
-	float dr, float fr, float ir, float pr, float br, float sr)
+void ALivingBeing::SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, 
+	float dr,float dc,  float fr, float ir, float pr, float br, float sr)
 {
 	HealthPoints = hp;
 	DamagePoints = dp;
 	ActionPoints = ap;
 	SpeedPoints = sp;
-	DefensePoints = df;
 	DamageResist = dr;
+	DodgeChance = dc;
 	FireResist = fr;
 	IceResist = ir;
 	PoiseResist = pr;

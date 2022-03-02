@@ -79,8 +79,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	UFUNCTION(BlueprintCallable)
 	void SetNextChar();
+
+	UFUNCTION(BlueprintCallable)
+	void SelectTile();
+
+	UFUNCTION(BlueprintCallable)
+	void SelectAction(FAction Action);
 	
 	UFUNCTION(BlueprintCallable)
 	void SumHeroesUp();

@@ -30,9 +30,6 @@ public:
 	int32 SpeedPoints=1;
 
 	UPROPERTY(BlueprintReadWrite,Category="LivingBeing")
-	int32 DefensePoints=1;
-
-	UPROPERTY(BlueprintReadWrite,Category="LivingBeing")
 	TArray<FAction> Actions;
 
 	UPROPERTY(BlueprintReadWrite,Category="LivingBeing")
@@ -53,6 +50,9 @@ public:
 	float DamageResist = 0;
 
 	UPROPERTY(BlueprintReadWrite,Category="Resists")
+	float DodgeChance = 0;
+
+	UPROPERTY(BlueprintReadWrite,Category="Resists")
 	float FireResist = 0;
 
 	UPROPERTY(BlueprintReadWrite,Category="Resists")
@@ -67,6 +67,7 @@ public:
 	UPROPERTY(BlueprintReadWrite,Category="Resists")
 	float StunResist = 0;
 	
+	FRandomStream RandomStream;
 	//FCharDataStruct CharDataStruct;
 
 protected:
@@ -93,7 +94,7 @@ public:
 	void CheckEffects();
 
 	UFUNCTION(BlueprintCallable)
-	void Move();
+	virtual void Move();
 
 	UFUNCTION(BlueprintCallable)
 	void DoAction();
@@ -105,6 +106,6 @@ public:
 	void Interact();
 
 	UFUNCTION(BlueprintCallable)
-	void SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, int32 df,
-		float dr, float fr, float ir, float pr, float br, float sr);
+	void SetParameters(int32 hp, int32 dp, int32 ap, int32 sp,
+		float dr, float dc, float fr, float ir, float pr, float br, float sr);
 };

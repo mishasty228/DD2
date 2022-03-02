@@ -36,6 +36,7 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 CurIndex=0;
 
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TEnumAsByte<ECharType> HeroType = ECT_Knight;
 
 protected:
@@ -47,7 +48,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void InitializeHero();
+	UFUNCTION(BlueprintCallable)
+	void InitializeHero(TEnumAsByte<ECharType> Type);
+
+	virtual void Move() override;
+
+	
 };
 
 
