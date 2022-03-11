@@ -102,8 +102,12 @@ bool ATileBase::CharInteraction_Implementation(ACharBase* Char)
 {
 	switch (TilesStruct.TileType)
 	{
-	case ETT_Path:
 	case ETT_Door:
+		//if (TilesStruct.Interactable==false)
+		Char->CurIndex= this->TilesStruct.aind;
+     	return true;
+     	break;
+	case ETT_Path:
 	case ETT_Room:
 	case ETT_Spawn:
 	case ETT_Portal:

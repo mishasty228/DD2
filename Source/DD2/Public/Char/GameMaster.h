@@ -101,6 +101,8 @@ public:
 	UFUNCTION()
 	void Move();
 
+	void MoveCycle();
+
 	void CheckLeft();
 
 	void ClearAvailable();

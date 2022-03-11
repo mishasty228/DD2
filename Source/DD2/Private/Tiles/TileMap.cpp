@@ -46,6 +46,7 @@ void ATileMap::SpawnEveryIndex()
 			spawnLocation = this->GetActorLocation();
 			spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
 			const FTilesStruct TilesStruct = FTilesStruct(i,j,i-j, CoordToIndex(FVector2D(i,j)));
+			TilesStruct.Interactable = false;
 			switch (TileTypes[i*worldSize+j])
 			{
 			case ETT_Room:
@@ -80,6 +81,7 @@ void ATileMap::SpawnEveryIndex()
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDoor,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
+					TilesStruct.Interactable = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -133,6 +135,7 @@ void ATileMap::SpawnEveryIndex()
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDespawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
+					TilesStruct.Interactable = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -159,6 +162,7 @@ void ATileMap::SpawnEveryIndex()
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileChest,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = false;
+					TilesStruct.Interactable = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -172,6 +176,7 @@ void ATileMap::SpawnEveryIndex()
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileKey,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
+					TilesStruct.Interactable = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);
@@ -185,6 +190,7 @@ void ATileMap::SpawnEveryIndex()
 					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileShop,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = false;
+					TilesStruct.Interactable = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
 					CurTile->TilesStruct = TilesStruct;
 					Tiles.Add(CurTile);

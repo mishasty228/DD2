@@ -41,7 +41,8 @@ struct FTilesStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	mutable bool Visited = false;
 
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	mutable bool Interactable = false;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	mutable TEnumAsByte<ETileType> TileType = ETT_Path;

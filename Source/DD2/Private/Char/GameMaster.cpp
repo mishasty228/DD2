@@ -90,27 +90,29 @@ void AGameMaster::SetNextChar()
 
 void AGameMaster::SelectTile()
 {
-	const int32 index=SelectedTile->TilesStruct.aind;
-	const ATileBase* Tile = Map->FindTileByIndex(index);
-	if (Tile)
+	if (SelectedTile)
 	{
-		if (Tile->TilesStruct.TileType==ETT_Room || Tile->TilesStruct.TileType==ETT_Path ||
-			Tile->TilesStruct.TileType==ETT_Trap )
-		{
-			Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
-			Path.RemoveAt(0);
-		}
-		else if (Tile->TilesStruct.TileType==ETT_Chest || Tile->TilesStruct.TileType==ETT_Door ||
-			Tile->TilesStruct.TileType==ETT_Key || Tile->TilesStruct.TileType==ETT_Portal ||
-			Tile->TilesStruct.TileType==ETT_Shop)
-		{
-			Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
-			Path.RemoveAt(0);
-			Path.RemoveAt(Path.Num()-1);
-		}
-		Move();
+		const int32 index=SelectedTile->TilesStruct.aind;
+        const ATileBase* Tile = Map->FindTileByIndex(index);
+        if (Tile)
+        {
+        	/*if (Tile->TilesStruct.TileType==ETT_Room || Tile->TilesStruct.TileType==ETT_Path ||
+        		Tile->TilesStruct.TileType==ETT_Trap )
+        	{
+        		Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
+        	}
+        	else if (Tile->TilesStruct.TileType==ETT_Chest || Tile->TilesStruct.TileType==ETT_Door ||
+        		Tile->TilesStruct.TileType==ETT_Key || Tile->TilesStruct.TileType==ETT_Portal ||
+        		Tile->TilesStruct.TileType==ETT_Shop)
+        	{
+        		Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
+        		Path.RemoveAt(Path.Num()-1);
+        	}*/
+        	Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
+        	//Path.RemoveAt(0);
+        	MoveCycle();
+        }
 	}
-	 
 }
 
 void AGameMaster::SelectAction(FAction Action)
@@ -220,7 +222,8 @@ void AGameMaster::Move()
         			Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
         		}
         		AP--;
-        		GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::Move, 1.5f);
+        		Path.Remove(MoveTile->TilesStruct.aind);
+        		GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::MoveCycle, 1.5f);
         	}
         	else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"));
 	}
@@ -229,7 +232,37 @@ void AGameMaster::Move()
 		bMoving = false;
 		CheckLeft();
 	}
-		
+}
+
+void AGameMaster::MoveCycle()
+{
+	if (Path.Num()>0&&AP>0)
+	{
+		bMoving = true;
+		const int32 ind = Path[0];
+		ATileBase* indTile = Map->FindTileByIndex(ind);
+		if (indTile)
+		{
+			Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
+			if (indTile->TilesStruct.Interactable==false)
+            {
+                Path.RemoveAt(0);
+            }
+			if (indTile->CharInteraction(CurrentCharacter))
+			{
+				indTile->TilesStruct.Available = false;
+			}
+			AP--;
+			GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::MoveCycle, 1.5f);
+		}
+		else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"));
+	}
+	else
+	{
+		bMoving = false;
+		CheckLeft();
+	}
+	
 }
 
 void AGameMaster::CheckLeft()
