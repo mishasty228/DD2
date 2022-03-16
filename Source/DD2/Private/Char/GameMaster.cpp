@@ -93,6 +93,7 @@ void AGameMaster::SelectTile()
 	if (SelectedTile)
 	{
 		const int32 index=SelectedTile->TilesStruct.aind;
+		if (index==CurrentCharacter->CurIndex) return;
         const ATileBase* Tile = Map->FindTileByIndex(index);
         if (Tile)
         {
@@ -108,7 +109,7 @@ void AGameMaster::SelectTile()
         		Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
         		Path.RemoveAt(Path.Num()-1);
         	}*/
-        	Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
+        	Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index, AP);
         	//Path.RemoveAt(0);
         	MoveCycle();
         }
@@ -166,8 +167,8 @@ void AGameMaster::Select()
 	TraceParams.bReturnPhysicalMaterial = true;
 	
 	PlayerController->DeprojectMousePositionToWorld(startray, startdir);
-	UE_LOG(LogTemp, Display, TEXT("startray %f, %f, %f"), startray.X, startray.Y, startray.Z);
-	UE_LOG(LogTemp, Display, TEXT("startdir %f, %f, %f"), startdir.X, startdir.Y, startdir.Z);
+	//UE_LOG(LogTemp, Display, TEXT("startray %f, %f, %f"), startray.X, startray.Y, startray.Z);
+	//UE_LOG(LogTemp, Display, TEXT("startdir %f, %f, %f"), startdir.X, startdir.Y, startdir.Z);
 	if (GetWorld()->LineTraceSingleByChannel(Hit, startray, startray+startdir*5000, ECC_GameTraceChannel3, TraceParams ))
 	{
 		ATileBase* HitActor = Cast<ATileBase>(Hit.Actor);
@@ -193,7 +194,7 @@ void AGameMaster::Select()
 				if (AP>=Map->GetTDistance( SelectedTile->TilesStruct.aind))
 				{
 					UE_LOG(LogTemp,Display,TEXT("Good"));
-					Path = Map->FindPathRoute(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind);
+					Path = Map->FindPathRoute(CurrentCharacter->CurIndex, SelectedTile->TilesStruct.aind, AP);
                     for (int32 i : Path)
                     {
                     	Map->FindTileByIndex(i)->SetMatScalarParameter("Boost", .5f);
@@ -223,7 +224,7 @@ void AGameMaster::Move()
         		}
         		AP--;
         		Path.Remove(MoveTile->TilesStruct.aind);
-        		GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::MoveCycle, 1.5f);
+        		GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::MoveCycle, 1.0f);
         	}
         	else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"));
 	}

@@ -272,7 +272,7 @@ public:
 	UFUNCTION(BlueprintCallable)
     TArray<ATileBase*> FindTilesReachable(int32 index, int32 range);
 
-	TArray<int32> FindPathRoute(int32 A, int32 B);
+	TArray<int32> FindPathRoute(int32 A, int32 B, int32 AP);
 	
 	UFUNCTION()
 	int32 GetDistance(int32 A, int32 B);

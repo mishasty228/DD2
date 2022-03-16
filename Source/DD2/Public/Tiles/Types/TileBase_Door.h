@@ -19,4 +19,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OpenDoor();
+
+	UFUNCTION(BlueprintCallable)
+	bool TryToOpen(ACharBase* Char);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bOpened=false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bLocked=false;
 };

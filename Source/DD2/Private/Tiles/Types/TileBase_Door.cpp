@@ -5,12 +5,39 @@
 
 bool ATileBase_Door::CharInteraction_Implementation(ACharBase* Char)
 {
-	if (TilesStruct.Interactable==true)
+	if (!Super::CharInteraction_Implementation(Char) )
 	{
-		OpenDoor_Implementation();
-		TilesStruct.Interactable = false;
+		if (bLocked == true)
+		{
+			if (TryToOpen(Char))
+			{
+				bLocked =false;
+				TilesStruct.Available = true;
+				return false;
+			}
+		}
+		else
+		{
+			if (!bOpened)
+            {
+            	OpenDoor_Implementation();
+            	TilesStruct.Interactable = false;
+            	TilesStruct.Available = true;
+            	return false;
+            }
+		}
 	}
-	return Super::CharInteraction_Implementation(Char);
+	return true;
+}
+
+/**
+ * @brief 
+ * @param Char is to check its inventory for a key
+ * @return if key is at backpack, then return true and remove 1 key from inventory
+ */
+bool ATileBase_Door::TryToOpen(ACharBase* Char)
+{
+	return true;
 }
 
 void ATileBase_Door::OpenDoor_Implementation()

@@ -339,7 +339,7 @@ TArray<ATileBase*> ATileMap::FindTilesReachable(int32 index, int32 range)
 	return Result;
 }
 
-TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
+TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B, int32 AP)
 {
 	TArray<int32> Path;
 	TArray<int32> openPath;
@@ -359,9 +359,9 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 		CurTile = FindTileByIndex(CurIndex);
 		openPath.Remove(CurIndex);
 		closedPath.Add(CurIndex);
-		UE_LOG(LogTemp,Display,TEXT("Added index %i to closedPath with G %i, H %i, F %i"), CurIndex, CurTile->G,
-						CurTile->H, CurTile->F);
-
+		//UE_LOG(LogTemp,Display,TEXT("Added index %i to closedPath with G %i, H %i, F %i"), CurIndex, CurTile->G,
+		//				CurTile->H, CurTile->F);
+		if (CurTile->F >= AP*5) break; 
 		const int32 g = FindTileByIndex(CurIndex)->G + 1;
 
 		if (closedPath.Contains(B))
@@ -389,8 +389,9 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 					CheckTile->H = GetDistance(adTile, B);
 					CheckTile->F = GetFDistance(A,adTile,B);
 					openPath.Add(adTile);
-					UE_LOG(LogTemp,Display,TEXT("Added index %i to openPath with G %i, H %i, F %i"), adTile, CheckTile->G,
-						CheckTile->H, CheckTile->F);
+					
+					//UE_LOG(LogTemp,Display,TEXT("Added index %i to openPath with G %i, H %i, F %i"), adTile, CheckTile->G,
+					//	CheckTile->H, CheckTile->F);
 				}
 				else if (CheckTile->F > g + CheckTile->H)
 				{
@@ -399,6 +400,7 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 				}
 			}
 		}
+		
 	}
 
 	if (closedPath.Contains(B))
@@ -414,7 +416,7 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 				const ATileBase* CheckTile = FindTileByIndex(adTile);
 				if (CheckTile->G == i && closedPath.Contains(adTile))
 				{
-					UE_LOG(LogTemp, Display, TEXT("Path index is %i"), CurIndex);
+					//UE_LOG(LogTemp, Display, TEXT("Path index is %i"), CurIndex);
 					CurIndex = adTile;
 					Path.Add(CurIndex);
 					break;
@@ -427,7 +429,8 @@ TArray<int32> ATileMap::FindPathRoute(int32 A, int32 B)
 	{
 		Path.Swap(i,Path.Num()-1-i);
 	}
-	Path.RemoveAt(0);
+	if (Path.Num()>1)	Path.RemoveAt(0);
+	else return Path;
 	for (int32 i : Path) UE_LOG(LogTemp,Display,TEXT("%i "),i) ;
 	return Path;
 }
