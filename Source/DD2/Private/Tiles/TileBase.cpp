@@ -95,11 +95,18 @@ void ATileBase::Tick(float DeltaTime)
 
 void ATileBase::SetMatScalarParameter(FName Name, float Value)
 {
-	if (MIDynamic) MIDynamic->SetScalarParameterValue(Name, Value);
+	if (IsValid(MIDynamic)) MIDynamic->SetScalarParameterValue(Name, Value);
 }
 
 bool ATileBase::CharInteraction_Implementation(ACharBase* Char)
 {
+	if (TilesStruct.Interactable==false)
+	{
+		FVector StartLocation = Char->GetActorLocation();
+		
+		Char->CurIndex= this->TilesStruct.aind;
+		return true;
+	}
 	switch (TilesStruct.TileType)
 	{
 	case ETT_Door:

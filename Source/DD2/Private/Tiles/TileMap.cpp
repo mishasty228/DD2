@@ -45,6 +45,7 @@ void ATileMap::SpawnEveryIndex()
 			posY = j;
 			spawnLocation = this->GetActorLocation();
 			spawnLocation+=FVector(offsetX*i,offsetY*j*2-offsetY*i,0);
+			ATileBase* CurTile = nullptr;
 			const FTilesStruct TilesStruct = FTilesStruct(i,j,i-j, CoordToIndex(FVector2D(i,j)));
 			TilesStruct.Interactable = false;
 			switch (TileTypes[i*worldSize+j])
@@ -52,7 +53,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Room:
 				if(TileBase)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
@@ -65,7 +66,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Path:
 				if(TileBase)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileBase,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
@@ -78,7 +79,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Door:
 				if(TileDoor)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDoor,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileDoor,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
 					TilesStruct.Interactable = true;
@@ -92,7 +93,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Block:
 				if(TileBlock)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileBlock,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileBlock,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = false;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
@@ -105,7 +106,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Wall:
 				if(TileWall)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileWall,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileWall,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					CurTile->AdditionalMesh->AddWorldRotation(CheckWallRotation(i*worldSize+j));
 					TilesStruct.Available = false;
@@ -119,7 +120,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Spawn:
 				if(TileSpawner)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileSpawner,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileSpawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
@@ -132,7 +133,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Portal:
 				if(TileDespawner)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileDespawner,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileDespawner,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
 					TilesStruct.Interactable = true;
@@ -146,7 +147,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_EnemySpawn:
 				if(TileEnemy)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileEnemy,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileEnemy,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = false;
 					TilesStruct.TileType = TileTypes[i*worldSize+j];
@@ -159,7 +160,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Chest:
 				if(TileChest)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileChest,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileChest,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = false;
 					TilesStruct.Interactable = true;
@@ -173,7 +174,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Key:
 				if(TileKey)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileKey,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileKey,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = true;
 					TilesStruct.Interactable = true;
@@ -187,7 +188,7 @@ void ATileMap::SpawnEveryIndex()
 			case ETT_Shop:
 				if(TileShop)
 				{
-					ATileBase* CurTile = GetWorld()->SpawnActor<ATileBase>(TileShop,
+					CurTile = GetWorld()->SpawnActor<ATileBase>(TileShop,
 					spawnLocation, rotator,	FActorSpawnParameters());
 					TilesStruct.Available = false;
 					TilesStruct.Interactable = true;
@@ -200,6 +201,7 @@ void ATileMap::SpawnEveryIndex()
 				break;
 				default:break;
 			}
+			if (IsValid(CurTile)) CurTile->Map = this;
 			/*if(TileBase&& (TileTypes[i*worldSize+j]!=ETT_None && TileTypes[i*worldSize+j]!=ETT_Last))
 			{
 				spawnLocation = this->GetActorLocation();
@@ -215,6 +217,7 @@ void ATileMap::SpawnEveryIndex()
 				true));
 			}*/
 		}
+		
 	}
 }
 

@@ -20,7 +20,8 @@ void AGameMaster::BeginPlay()
 	Super::BeginPlay();
 	PlayerController = Cast<ADD2PlayerController>(GetWorld()->GetFirstPlayerController());
 	PlayerController->SetShowMouseCursor(true);
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::SumHeroesUp, 1.0f);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::FirstHeroesSetup, 1.0f);
+	
 }
 
 
@@ -111,7 +112,8 @@ void AGameMaster::SelectTile()
         	}*/
         	Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index, AP);
         	//Path.RemoveAt(0);
-        	MoveCycle();
+        	CurrentCharacter->Move(Path);
+        	//MoveCycle();
         }
 	}
 }
@@ -119,6 +121,24 @@ void AGameMaster::SelectTile()
 void AGameMaster::SelectAction(FAction Action)
 {
 	
+}
+
+void AGameMaster::FirstHeroesSetup()
+{
+	SortChars();
+	CharactersForTurn = Characters;
+	for (ACharBase* Char : Characters)
+	{
+		Char->GameMaster = this;
+		Char->Map = Map;
+		if (IsValid(Char))
+		{
+			UE_LOG (LogTemp, Display, TEXT("This char's name is %s gm is %s and map is %s"), *Char->Name,
+            			*Char->GameMaster->GetName(),*Char->Map->GetName());
+		}
+		else UE_LOG(LogTemp,Warning,TEXT("No chars so far"));
+	}
+	return;
 }
 
 
@@ -208,32 +228,6 @@ void AGameMaster::Select()
 		else SelectedTile = nullptr;
 	}
 } 
-
-void AGameMaster::Move()
-{
-	if (Path.Num()>0)
-	{
-		bMoving = true;
-		ATileBase* MoveTile = Map->FindTileByIndex(Path[0]);
-        	if (MoveTile)
-        	{
-        		Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = true;
-        		if (MoveTile->CharInteraction(CurrentCharacter))
-        		{
-        			Map->FindTileByIndex(CurrentCharacter->CurIndex)->TilesStruct.Available = false;
-        		}
-        		AP--;
-        		Path.Remove(MoveTile->TilesStruct.aind);
-        		GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::MoveCycle, 1.0f);
-        	}
-        	else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"));
-	}
-	else
-	{
-		bMoving = false;
-		CheckLeft();
-	}
-}
 
 void AGameMaster::MoveCycle()
 {

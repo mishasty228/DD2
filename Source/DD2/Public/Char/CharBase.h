@@ -4,7 +4,6 @@
 
 
 #include "CharDataComponent.h"
-#include "DD2PlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -12,6 +11,7 @@
 #include "Living/LivingBeing.h"
 #include "CharBase.generated.h"
 
+class AGameMaster;
 class ADD2PlayerController;
 class ATileBase;
 
@@ -24,6 +24,12 @@ public:
 	// Sets default values for this character's properties
 	ACharBase();
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Names")
+	TArray<FString> Names = {"Debchik", "Dodik", "Kretin", "Loshped", "Gremlinus", "Durachok", "Baranid", "Kurdyuck"};
+	
+	UPROPERTY()
+	AGameMaster* GameMaster=nullptr;
+
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
 	USceneComponent* Scene;
 
@@ -32,9 +38,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
 	UCameraComponent* Camera;
-
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	int32 CurIndex=0;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TEnumAsByte<ECharType> HeroType = ECT_Knight;
@@ -51,9 +54,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializeHero(TEnumAsByte<ECharType> Type);
 
-	virtual void Move() override;
+	virtual void Move(TArray<int32> Path) override;
 
-	
+	virtual bool Step(ATileBase* Tile) override;
+
+	virtual void StartTurn() override;
+
+	virtual void EndTurn() override;
 };
 
 

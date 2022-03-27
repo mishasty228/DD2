@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DD2PlayerController.h"
-#include "FAction.h"
+#include "Living/FAction.h"
 #include "GameFramework/Character.h"
 #include "Tiles/TileMap.h"
 #include "Char/CharBase.h"
@@ -89,6 +89,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SelectAction(FAction Action);
+
+	UFUNCTION(BlueprintCallable)
+	void FirstHeroesSetup();
 	
 	UFUNCTION(BlueprintCallable)
 	void SumHeroesUp();
@@ -98,9 +101,6 @@ public:
 
 	void Select();
 	
-	UFUNCTION()
-	void Move();
-
 	void MoveCycle();
 
 	void CheckLeft();

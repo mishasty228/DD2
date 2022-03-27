@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "ECharTypes.h"
 #include "FCharDataStruct.h"
 #include "Components/ActorComponent.h"
+#include "Living/ECharTypes.h"
 #include "CharDataComponent.generated.h"
 
 //class ATileBase;

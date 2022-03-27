@@ -59,6 +59,9 @@ public:
 
 	UPROPERTY()
 	AActor* OnActor;
+
+	UPROPERTY()
+	ATileMap* Map;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileCoordinates");
 	FVector CubeCoordinates = FVector().ZeroVector;

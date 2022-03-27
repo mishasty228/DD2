@@ -3,12 +3,12 @@
 
 #include "Living/LivingBeing.h"
 
-
 // Sets default values
 ALivingBeing::ALivingBeing()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 }
 
 // Called when the game starts or when spawned
@@ -90,12 +90,23 @@ void ALivingBeing::CheckEffects()
 		{
 			GetDamage(Effect.Damage);
 			Effect.SetDuration(Effect.Duration-1);
+			if (Effect.EffectType==EET_Stun) EndTurn();
 		}
 		else Effect.SetDamage(0);
 	}
 }
 
-void ALivingBeing::Move()
+void ALivingBeing::Move(TArray<int32> Path)
+{
+	
+}
+
+bool ALivingBeing::Step(ATileBase* Tile)
+{
+	return true;
+}
+
+void ALivingBeing::MoveToLocation_Implementation(FVector Target)
 {
 	
 }
@@ -110,13 +121,23 @@ void ALivingBeing::SelectAction()
 	
 }
 
-void ALivingBeing::Interact()
+void ALivingBeing::Interact(int32 Index)
+{
+	
+}
+
+void ALivingBeing::StartTurn()
+{
+	CheckEffects();
+}
+
+void ALivingBeing::EndTurn()
 {
 	
 }
 
 void ALivingBeing::SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, 
-	float dr,float dc,  float fr, float ir, float pr, float br, float sr)
+                                 float dr,float dc,  float fr, float ir, float pr, float br, float sr)
 {
 	HealthPoints = hp;
 	DamagePoints = dp;

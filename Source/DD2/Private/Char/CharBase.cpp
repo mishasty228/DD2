@@ -3,6 +3,9 @@
 
 #include "Char/CharBase.h"
 
+#include "Char/GameMaster.h"
+
+
 // Sets default values
 ACharBase::ACharBase()
 {	
@@ -41,6 +44,7 @@ void ACharBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ACharBase::InitializeHero(TEnumAsByte<ECharType> Type)
 {
 	HeroType = Type;
+	RandomStream.GenerateNewSeed();
 	switch (HeroType)
 	{
 	case ECT_Knight:
@@ -107,12 +111,57 @@ void ACharBase::InitializeHero(TEnumAsByte<ECharType> Type)
 		);
 		break;
 	}
-	
+	Name = Names[RandomStream.RandRange(0,Names.Num()-1)];
 }
 
-void ACharBase::Move()
+void ACharBase::Move(TArray<int32> Path)
 {
-	Super::Move();
+	while (Path.Num()>0 && GameMaster->AP>0)
+	{
+		ATileBase* TileToGo = Map->FindTileByIndex(Path[0]);
+		if (IsValid(TileToGo))
+		{
+			if (Step(TileToGo))
+			{
+				Path.RemoveAt(0);
+			}
+			GameMaster->AP--;
+		}
+	}
+	if (GameMaster->AP>0) GameMaster->CheckLeft();
+	else EndTurn();
+	Super::Move(Path);
+}
+
+bool ACharBase::Step(ATileBase* Tile)
+{
+	if (Tile->TilesStruct.Interactable)
+	{
+		Tile->CharInteraction(this);
+		return false;
+	}
+	else
+	{
+		Map->FindTileByIndex(CurIndex)->TilesStruct.Available = true;
+		MoveToLocation(Tile->GetActorLocation()+FVector(0,0,50));
+		//Movement animation needed
+		Tile->TilesStruct.Available = false;
+		CurIndex = Tile->TilesStruct.aind;
+		//this->SetActorLocation(Tile->GetActorLocation()+FVector(0,0,50));
+	}
+	return Super::Step(Tile);
+}
+
+void ACharBase::StartTurn()
+{
+	Super::StartTurn();
+	GameMaster->AP=ActionPoints;
+}
+
+void ACharBase::EndTurn()
+{
+	Super::EndTurn();
+	GameMaster->SetNextChar();
 }
 
 

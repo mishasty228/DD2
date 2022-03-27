@@ -3,11 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Char/FAction.h"
-#include "Char/FActionEffect.h"
+
+#include "Living/FAction.h"
+#include "Living/FActionEffect.h"
 #include "GameFramework/Character.h"
+
 #include "LivingBeing.generated.h"
 
+class UNavigationInvokerComponent;
+class ATileMap;
+class ATileBase;
 UCLASS()
 class DD2_API ALivingBeing : public ACharacter
 {
@@ -16,6 +21,15 @@ class DD2_API ALivingBeing : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ALivingBeing();
+
+	UPROPERTY()
+	ATileMap* Map = nullptr;
+
+	UPROPERTY()
+	FTimerHandle TimerHandle;
+	
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	int32 CurIndex=0;
 
 	UPROPERTY(BlueprintReadWrite,Category="LivingBeing")
 	int32 HealthPoints=1;
@@ -44,7 +58,7 @@ public:
 	UTexture2D* Thumbnail = nullptr;
 
 	UPROPERTY(BlueprintReadWrite,Category="View")
-	FString Name;
+	FString Name = "";
 
 	UPROPERTY(BlueprintReadWrite,Category="Resists")
 	float DamageResist = 0;
@@ -94,16 +108,31 @@ public:
 	void CheckEffects();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Move();
+	virtual void Move(TArray<int32> Path);
 
 	UFUNCTION(BlueprintCallable)
-	void DoAction();
+	virtual bool Step(ATileBase* Tile);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void MoveToLocation(FVector Target);
 
 	UFUNCTION(BlueprintCallable)
-	void SelectAction();
+	virtual void DoAction();
 
 	UFUNCTION(BlueprintCallable)
-	void Interact();
+	virtual void SelectAction();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void Interact(int32 Index);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void StartTurn();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void EndTurn();
+
+
+	
 
 	UFUNCTION(BlueprintCallable)
 	void SetParameters(int32 hp, int32 dp, int32 ap, int32 sp,
