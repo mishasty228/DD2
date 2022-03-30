@@ -42,6 +42,8 @@ public:
 	//UPROPERTY()
 	//bool bUp = false;
 
+	clock_t begin=0;
+
 	//UPROPERTY()
 	//bool bRight = false;
 	
@@ -243,6 +245,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FRotator CheckWallRotation(int32 Index);
 
+	UFUNCTION(BlueprintCallable)
+    void RoomCorCycle();
+    
+    UFUNCTION(BlueprintCallable)
+    void FinishRoomCorners();
+
+    UFUNCTION(BlueprintCallable)
+    void DoOptionalCorridors(int32 start, int32 end, int32 dir);
+
 	//Tile Functions
 
 	UFUNCTION(BlueprintCallable)
@@ -253,15 +264,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	int32 CoordToIndex(FVector2D coord);
-
-	UFUNCTION(BlueprintCallable)
-	void RoomCorCycle();
-
-	UFUNCTION(BlueprintCallable)
-	void FinishRoomCorners();
-
-	UFUNCTION(BlueprintCallable)
-	void DoOptionalCorridors(int32 start, int32 end, int32 dir);
 
 	UFUNCTION(BlueprintCallable)
     ATileBase* FindTileByIndex(int32 index);

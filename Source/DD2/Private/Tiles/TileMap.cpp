@@ -21,6 +21,7 @@ ATileMap::ATileMap()
 
 void ATileMap::DunGenMain()
 {
+	begin = clock();
 	RandStreamGen();
 	UE_LOG(LogTemp, Display, TEXT("Seed is %i"), seed);
 	prevLocation = FVector2D(worldSize/2);
@@ -31,12 +32,14 @@ void ATileMap::DunGenMain()
 	FindOptionalCorridors();
 	FinishRoomCorners();
 	SpawnEveryIndex();
+	
 }
 
 //Indexes spawning
 
 void ATileMap::SpawnEveryIndex()
 {
+	
 	for (int32 i = 0; i < worldSize; i++)
 	{
 		posX = i;
@@ -50,6 +53,7 @@ void ATileMap::SpawnEveryIndex()
 			TilesStruct.Interactable = false;
 			switch (TileTypes[i*worldSize+j])
 			{
+			//case ETT_None:
 			case ETT_Room:
 				if(TileBase)
 				{
@@ -219,6 +223,7 @@ void ATileMap::SpawnEveryIndex()
 		}
 		
 	}
+	//UE_LOG(LogTemp, Display, TEXT("Generation took %f"), static_cast<float>(clock() - begin)/10000);
 }
 
 //Indexes setup 
@@ -274,7 +279,6 @@ void ATileMap::RandStreamGen()
 ATileBase* ATileMap::FindTileByIndex(int32 index)
 {
 	ATileBase* IndexedTile = nullptr;
-	//UE_LOG(LogTemp,Display,TEXT("Looking for tile with index %i"), index);
 	for (ATileBase* Tile : Tiles)
 	{
 		if (Tile->TilesStruct.aind == index)
@@ -328,7 +332,6 @@ TArray<ATileBase*> ATileMap::FindTilesReachable(int32 index, int32 range)
 				ATileBase* CheckTile = FindTileByIndex(curInd);
 				if (CheckTile && !Visited.Contains(curInd) && CheckTile->TilesStruct.Available)
 				{
-					//UE_LOG(LogTemp,Display,TEXT("Found available non-visited tile"));
 					CheckTile->Distance=k;
 					CurRun.Add(curInd);
 					Visited.Add(curInd);

@@ -133,8 +133,8 @@ void AGameMaster::FirstHeroesSetup()
 		Char->Map = Map;
 		if (IsValid(Char))
 		{
-			UE_LOG (LogTemp, Display, TEXT("This char's name is %s gm is %s and map is %s"), *Char->Name,
-            			*Char->GameMaster->GetName(),*Char->Map->GetName());
+			//UE_LOG (LogTemp, Display, TEXT("This char's name is %s gm is %s and map is %s"), *Char->Name,
+            //			*Char->GameMaster->GetName(),*Char->Map->GetName());
 		}
 		else UE_LOG(LogTemp,Warning,TEXT("No chars so far"));
 	}
