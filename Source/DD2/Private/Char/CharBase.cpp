@@ -99,7 +99,7 @@ void ACharBase::InitializeHero(TEnumAsByte<ECharType> Type)
 		SetParameters(
 		RandomStream.RandRange(30,35),
 		RandomStream.RandRange(10,15),
-		RandomStream.RandRange(3,7),
+		RandomStream.RandRange(3,5),
 		RandomStream.RandRange(10,15),
 		0.2f,
 		0.2f,
@@ -114,42 +114,52 @@ void ACharBase::InitializeHero(TEnumAsByte<ECharType> Type)
 	Name = Names[RandomStream.RandRange(0,Names.Num()-1)];
 }
 
-void ACharBase::Move(TArray<int32> Path)
+void ACharBase::Move()
 {
-	while (Path.Num()>0 && GameMaster->AP>0)
+	Super::Move();
+	if (Path.Num()>0 && GameMaster->AP>0)
 	{
 		ATileBase* TileToGo = Map->FindTileByIndex(Path[0]);
 		if (IsValid(TileToGo))
 		{
-			if (Step(TileToGo))
+			NextTile = TileToGo;
+			Step();
+			GameMaster->AP--;
+			if (StepSuccess)
 			{
 				Path.RemoveAt(0);
 			}
-			GameMaster->AP--;
+			else
+			{
+				GameMaster->CheckLeft();
+				return;
+			}
 		}
+		GetWorldTimerManager().SetTimer(TimerHandle, this, &ACharBase::Move, 0.5f);
 	}
-	if (GameMaster->AP>0) GameMaster->CheckLeft();
+	else if (GameMaster->AP>0) GameMaster->CheckLeft();
 	else EndTurn();
-	Super::Move(Path);
+	
 }
 
-bool ACharBase::Step(ATileBase* Tile)
+void ACharBase::Step()
 {
+	ATileBase* Tile = NextTile;
 	if (Tile->TilesStruct.Interactable)
 	{
 		Tile->CharInteraction(this);
-		return false;
+		StepSuccess = false;
+		return;
 	}
-	else
-	{
-		Map->FindTileByIndex(CurIndex)->TilesStruct.Available = true;
-		MoveToLocation(Tile->GetActorLocation()+FVector(0,0,50));
-		//Movement animation needed
-		Tile->TilesStruct.Available = false;
-		CurIndex = Tile->TilesStruct.aind;
-		//this->SetActorLocation(Tile->GetActorLocation()+FVector(0,0,50));
-	}
-	return Super::Step(Tile);
+	Map->FindTileByIndex(CurIndex)->TilesStruct.Available = true;
+	MoveToLocation(Tile->GetActorLocation()+FVector(0,0,50));
+	//Movement animation needed
+	Tile->TilesStruct.Available = false;
+	CurIndex = Tile->TilesStruct.aind;
+	StepSuccess = true;
+	return;
+	//this->SetActorLocation(Tile->GetActorLocation()+FVector(0,0,50));
+	//Super::Step();
 }
 
 void ACharBase::StartTurn()

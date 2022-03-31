@@ -96,14 +96,14 @@ void ALivingBeing::CheckEffects()
 	}
 }
 
-void ALivingBeing::Move(TArray<int32> Path)
+void ALivingBeing::Move()
 {
-	
+	UE_LOG(LogTemp, Display, TEXT("MoveCalled"));
 }
 
-bool ALivingBeing::Step(ATileBase* Tile)
+void ALivingBeing::Step()
 {
-	return true;
+	StepSuccess = true;
 }
 
 void ALivingBeing::MoveToLocation_Implementation(FVector Target)
@@ -133,7 +133,7 @@ void ALivingBeing::StartTurn()
 
 void ALivingBeing::EndTurn()
 {
-	
+	Path.Empty();
 }
 
 void ALivingBeing::SetParameters(int32 hp, int32 dp, int32 ap, int32 sp, 

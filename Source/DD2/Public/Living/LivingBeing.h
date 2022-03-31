@@ -27,6 +27,12 @@ public:
 
 	UPROPERTY()
 	FTimerHandle TimerHandle;
+
+	ATileBase* NextTile = nullptr;
+
+	TArray<int32> Path;
+
+	bool StepSuccess = false;
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 CurIndex=0;
@@ -108,10 +114,10 @@ public:
 	void CheckEffects();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Move(TArray<int32> Path);
+	virtual void Move();
 
 	UFUNCTION(BlueprintCallable)
-	virtual bool Step(ATileBase* Tile);
+	virtual void Step();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void MoveToLocation(FVector Target);

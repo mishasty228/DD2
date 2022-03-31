@@ -54,9 +54,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializeHero(TEnumAsByte<ECharType> Type);
 
-	virtual void Move(TArray<int32> Path) override;
+	virtual void Move() override;
 
-	virtual bool Step(ATileBase* Tile) override;
+	virtual void Step() override;
 
 	virtual void StartTurn() override;
 

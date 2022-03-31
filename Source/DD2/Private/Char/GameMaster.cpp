@@ -112,7 +112,8 @@ void AGameMaster::SelectTile()
         	}*/
         	Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index, AP);
         	//Path.RemoveAt(0);
-        	CurrentCharacter->Move(Path);
+        	CurrentCharacter->Path = Path;
+        	CurrentCharacter->Move();
         	//MoveCycle();
         }
 	}

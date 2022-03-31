@@ -25,5 +25,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitializeEnemy(TEnumAsByte<EEnemyType> Type);
 
-	virtual void Move(TArray<int32> Path) override;
+	virtual void Move() override;
 };

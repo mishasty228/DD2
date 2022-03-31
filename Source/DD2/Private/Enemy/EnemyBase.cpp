@@ -21,7 +21,7 @@ void AEnemyBase::InitializeEnemy(TEnumAsByte<EEnemyType> Type)
 	}
 }
 
-void AEnemyBase::Move(TArray<int32> Path)
+void AEnemyBase::Move()
 {
-	Super::Move(Path);
+	Super::Move();
 }
