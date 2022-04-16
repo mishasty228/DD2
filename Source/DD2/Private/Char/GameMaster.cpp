@@ -286,12 +286,15 @@ void AGameMaster::ColorAvailable()
 {
 	for (ATileBase* TileinMap : AvailableTiles)
 	{
-		TileinMap->SetMatScalarParameter("Boost", .5f);
-		TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Green);
-		if (TileinMap->TilesStruct.aind==CurrentCharacter->CurIndex)
+		if (IsValid(TileinMap))
 		{
 			TileinMap->SetMatScalarParameter("Boost", .5f);
-			TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Yellow);
+            TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Green);
+            if (TileinMap->TilesStruct.aind==CurrentCharacter->CurIndex)
+            {
+            	TileinMap->SetMatScalarParameter("Boost", .5f);
+            	TileinMap->SetMatVectorParameter("Emissive", FLinearColor().Yellow);
+            }
 		}
 	}
 }

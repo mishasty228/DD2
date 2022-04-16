@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Inventory/FItemStruct.h"
 #include "Living/LivingBeing.h"
 #include "CharBase.generated.h"
 
@@ -41,6 +42,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TEnumAsByte<ECharType> HeroType = ECT_Knight;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	TArray<FItemStruct> Inventory;
+
+	const int32 InventorySlots = 12;
 
 protected:
 	// Called when the game starts or when spawned

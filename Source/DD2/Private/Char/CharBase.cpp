@@ -152,7 +152,11 @@ void ACharBase::Step()
 		return;
 	}
 	Map->FindTileByIndex(CurIndex)->TilesStruct.Available = true;
-	MoveToLocation(Tile->GetActorLocation()+FVector(0,0,50));
+	FVector Origin;
+	FVector Box;
+	float Radius;
+	UKismetSystemLibrary::GetComponentBounds(Tile->Mesh,Origin, Box, Radius);
+	MoveToLocation(Origin);
 	//Movement animation needed
 	Tile->TilesStruct.Available = false;
 	CurIndex = Tile->TilesStruct.aind;

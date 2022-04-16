@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tiles/TileBase.h"
+#include "Tiles/Types/TileBase_Container.h"
 #include "TileBase_Chest.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DD2_API ATileBase_Chest : public ATileBase
+class DD2_API ATileBase_Chest : public ATileBase_Container
 {
 	GENERATED_BODY()
 	

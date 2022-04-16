@@ -9,6 +9,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/Actor.h"
+#include "Inventory/FItemStruct.h"
 #include "TileBase.generated.h"
 
 
@@ -54,6 +55,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Tiles")
 	TArray<ATileBase*> AvailableNeighs;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="ItemContainer")
+	TArray<FItemStruct> Container;
+
 	UPROPERTY()
 	UMaterialInstanceDynamic* MIDynamic;
 
@@ -95,8 +99,6 @@ public:
 	
 	
 protected:
-	
-	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

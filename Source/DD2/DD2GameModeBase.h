@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DD2HUD.h"
 #include "Char/GameMaster.h"
 #include "DD2PlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -22,4 +23,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	AGameMaster* GameMaster;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	ADD2HUD* HUD;
 };

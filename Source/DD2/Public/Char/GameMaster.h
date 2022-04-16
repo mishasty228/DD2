@@ -11,8 +11,7 @@
 #include "GameMaster.generated.h"
 
 
-
-
+class ADD2HUD;
 UCLASS()
 class DD2_API AGameMaster : public ACharacter
 {
@@ -27,13 +26,13 @@ public:
 	FTimerDelegate TimerDelegate;
 	FTimerHandle TimerHandle;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "Characters")
 	TArray<ACharBase*> Characters;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "Characters")
 	TArray<ACharBase*> CharactersForTurn;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "Characters")
 	ACharBase* CurrentCharacter;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -42,8 +41,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	int32 AP=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	AGameMaster* GameMaster;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = "GameplayDefaults")
+	ADD2HUD* HUD;
 
 	bool bCanSelect = true;
 	bool bMoving = false;
