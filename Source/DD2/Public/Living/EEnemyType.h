@@ -5,6 +5,9 @@
 UENUM (BlueprintType)
 enum EEnemyType
 {
-	EET_Goblin UMETA(DisplayName="Goblin")
-	
+	EEnT_None UMETA(DisplayName = "None"),
+	EEnT_Goblin UMETA(DisplayName="Goblin"),
+	EEnT_Skeleton UMETA(DisplayName="Skeleton"),
+	EEnT_Ifrit UMETA(DisplayName="Ifrit"),
+	EEnT_Bandit UMETA(DisplayName="Bandit")
 };

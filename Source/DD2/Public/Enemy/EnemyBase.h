@@ -20,7 +20,7 @@ public:
 	
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	TEnumAsByte<EEnemyType> EnemyType = EET_Goblin;
+	TEnumAsByte<EEnemyType> EnemyType = EEnT_None;
 
 	UFUNCTION(BlueprintCallable)
 	void InitializeEnemy(TEnumAsByte<EEnemyType> Type);

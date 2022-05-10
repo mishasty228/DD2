@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/SizeBox.h"
 #include "DD2_HUD.generated.h"
 
 class AGameMaster;
@@ -19,8 +20,9 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	AGameMaster* Player;
 
-private:
 
+private:
+	
 public:
 
 };

@@ -5,6 +5,8 @@
 
 #include <fstream>
 
+#include "DD2HUD.h"
+
 
 // Sets default values
 AGameMaster::AGameMaster()
@@ -40,6 +42,8 @@ void AGameMaster::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	
 	PlayerInputComponent->BindAction("CameraRotation", IE_Pressed, this, &AGameMaster::SetCanRotateTrue);
 	PlayerInputComponent->BindAction("CameraRotation", IE_Released, this, &AGameMaster::SetCanRotateFalse);
+
+	PlayerInputComponent->BindAction("ShowInventory", IE_Pressed, this, &AGameMaster::ToggleInventory);
 }
 
 void AGameMaster::Tick(float DeltaSeconds)
@@ -251,7 +255,7 @@ void AGameMaster::MoveCycle()
 			AP--;
 			GetWorldTimerManager().SetTimer(TimerHandle, this, &AGameMaster::MoveCycle, 1.5f);
 		}
-		else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"));
+		else UE_LOG(LogTemp,Display,TEXT("Couldn't find tile %i"), ind);
 	}
 	else
 	{
@@ -334,4 +338,13 @@ void AGameMaster::SetCanRotateFalse()
 		PlayerController->SetShowMouseCursor(true);
 		PlayerController->bCanSelect = true;
 	}
+}
+
+void AGameMaster::ToggleInventory()
+{
+	if (!HUD->Inventory->IsInViewport())
+	{
+		HUD->ShowInventoryWidget(true);
+	}
+	else HUD->ShowInventoryWidget(false);
 }

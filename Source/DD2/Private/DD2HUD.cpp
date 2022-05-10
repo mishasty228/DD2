@@ -32,10 +32,14 @@ void ADD2HUD::ShowInventoryWidget_Implementation(bool Show)
 	{
 		if (Show)
 		{
+			ShowHUDWidget_Implementation(false);
 			Inventory->AddToViewport();
+			UE_LOG(LogTemp, Display, TEXT("Inventory is shown"));
 			return;
 		}
 		Inventory->RemoveFromParent();
+		ShowHUDWidget_Implementation(true);
+		UE_LOG(LogTemp, Display, TEXT("Inventory is hid"));
 	}	
 }
 

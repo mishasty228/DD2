@@ -10,7 +10,7 @@ void AEnemyBase::InitializeEnemy(TEnumAsByte<EEnemyType> Type)
 {
 	switch (EnemyType)
 	{
-	case EET_Goblin:
+	case EEnT_Goblin:
 		SetParameters(10,5,5,5,
 			0.05f,0.05f,0.05f,0.05f,0.05f,0.05f,0.05f);
 		break;

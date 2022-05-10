@@ -13,7 +13,7 @@
 
 class AGameMaster;
 
-UCLASS()
+UCLASS(Config=Game)
 class DD2_API ATileMap : public AActor
 {
 	GENERATED_BODY()
@@ -65,13 +65,13 @@ public:
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	TEnumAsByte<EMapTypes> MapType = EMT_Base;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 minRoomSize = 3;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 minRoomSizeDefault = 3;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 maxRoomSize = 5;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
@@ -104,7 +104,7 @@ public:
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Spawn")
 	FRotator rotator;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 worldSize=0;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
@@ -129,7 +129,7 @@ public:
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	//int32 skip=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 spawnAmount = 4;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
@@ -162,22 +162,22 @@ public:
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomToSpawn=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 roomAmount=0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 minEnemies=2;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 maxEnemies=4;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	bool branching=false;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	float branchChance=0.2f;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	float optionalChance=0.2f;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="TileTypes")

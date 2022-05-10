@@ -10,6 +10,7 @@
 UENUM(BlueprintType)
 enum ECharType
 {
+	ECT_None UMETA(DisplayName = "None"),
     ECT_Knight UMETA(DisplayName="Knight"),
     ECT_Spearman UMETA(DisplayName="Spearman"),
     ECT_Archer UMETA(DisplayName="Archer"),

@@ -26,7 +26,7 @@ struct FLivingProperties
 	int32 SpeedPoints=0;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FAction Action;
+	TArray<FAction> Actions;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float DamageResist = 0;
@@ -62,7 +62,7 @@ inline FLivingProperties::FLivingProperties(int32 hp, int32 dp, int32 ap, int32 
 	DamagePoints = dp;
 	ActionPoints = ap;
 	SpeedPoints = sp;
-	Action = A;
+	Actions.Add(A);
 	DamageResist = dr;
 	DodgeChance = dc;
 	FireResist = fr;
