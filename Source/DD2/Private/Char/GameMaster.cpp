@@ -340,11 +340,11 @@ void AGameMaster::SetCanRotateFalse()
 	}
 }
 
-void AGameMaster::ToggleInventory()
+/*void AGameMaster::ToggleInventory()
 {
 	if (!HUD->Inventory->IsInViewport())
 	{
 		HUD->ShowInventoryWidget(true);
 	}
 	else HUD->ShowInventoryWidget(false);
-}
+}*/

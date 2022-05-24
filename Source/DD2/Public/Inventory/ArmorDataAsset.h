@@ -17,8 +17,32 @@ class DD2_API UArmorDataAsset : public UItemDataAsset
 public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	USkeletalMesh* ArmorMesh;
+	TArray<USkeletalMesh*> ChestMeshVariations;
 	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FLivingProperties LivingProperties;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 Health=0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 Speed=0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float DamageResist = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float DodgeChance = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float FireResist = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float IceResist = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float PoiseResist = 0;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float BleedResist = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float StunResist = 0;
 };

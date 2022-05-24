@@ -19,5 +19,6 @@ enum ECharType
 	ECT_Bard UMETA (DisplayName="Bard"),
 	ECT_Barbarian UMETA (DisplayName="Barbarian"),
 	ECT_Necromancer UMETA (DisplayName="Necromancer"),
-    ECT_Hunter UMETA(DisplayName="Hunter")
+    ECT_Hunter UMETA(DisplayName="Hunter"),
+	ECT_Rogue UMETA(DisplayName="Rogue")
 };

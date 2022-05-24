@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "Inventory/ArmorDataAsset.h"
+#include "Inventory/TalismanDataAsset.h"
+#include "Inventory/WeaponItemDataAsset.h"
 #include "Living/ECharTypes.h"
 #include "Living/FAction.h"
 #include "CharDataAsset.generated.h"
@@ -17,9 +20,6 @@ class DD2_API UCharDataAsset : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Visual")
-	FString Name = "None";
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Parameters")
 	TEnumAsByte<ECharType> CharType = ECT_None;
@@ -63,11 +63,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Visual")
 	UTexture2D* Thumbnail = nullptr;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Visual")
-	USkeletalMesh* Mesh = nullptr;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	UArmorDataAsset* Armor;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Visual")
-	UAnimationAsset* AnimationAsset = nullptr;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	UWeaponItemDataAsset* Weapon;
 
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	UTalismanDataAsset* Talisman;
 };

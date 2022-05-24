@@ -8,7 +8,12 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Data/CharDataAsset.h"
+#include "Inventory/ArmorDataAsset.h"
 #include "Inventory/FItemStruct.h"
+#include "Inventory/ItemDataAsset.h"
+#include "Inventory/TalismanDataAsset.h"
+#include "Inventory/WeaponItemDataAsset.h"
 #include "Living/LivingBeing.h"
 #include "CharBase.generated.h"
 
@@ -27,6 +32,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Names")
 	TArray<FString> Names = {"Debchik", "Dodik", "Kretin", "Loshped", "Gremlinus", "Durachok", "Baranid", "Kurdyuck"};
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TArray<UCharDataAsset*> Types;
 	
 	UPROPERTY()
 	AGameMaster* GameMaster=nullptr;
@@ -39,12 +47,24 @@ public:
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="Components")
 	UCameraComponent* Camera;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UCharDataAsset* CharData;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TEnumAsByte<ECharType> HeroType = ECT_Knight;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
-	TArray<FItemStruct> Inventory;
+	TArray<UItemDataAsset*> Inventory;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	UArmorDataAsset* Armor;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	UWeaponItemDataAsset* Weapon;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Inventory")
+	UTalismanDataAsset* Talisman;
 
 	const int32 InventorySlots = 12;
 
@@ -57,8 +77,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
-	void InitializeHero(TEnumAsByte<ECharType> Type);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void Initialize();
 
 	virtual void Move() override;
 

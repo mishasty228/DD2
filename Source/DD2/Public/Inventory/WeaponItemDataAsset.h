@@ -19,7 +19,7 @@ public:
     UStaticMesh* WeaponMesh;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-    FActionEffect Effect;
+    int32 Damage;
 
 	
 };

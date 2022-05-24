@@ -114,6 +114,6 @@ public:
 	void SetCanRotateTrue();
 	void SetCanRotateFalse();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void ToggleInventory();
 };

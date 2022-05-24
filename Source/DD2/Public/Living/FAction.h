@@ -37,6 +37,9 @@ struct FAction
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float EffectChance = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int Costs = 0;
 	
 };
 
