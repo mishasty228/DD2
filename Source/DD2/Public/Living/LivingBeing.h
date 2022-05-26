@@ -60,7 +60,7 @@ public:
 										FActionEffect(EET_Poise, 0, 0),
 										FActionEffect(EET_Stun, 0, 0)};
 
-	UPROPERTY(BlueprintReadWrite,Category="View")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="View")
 	UTexture2D* Thumbnail = nullptr;
 
 	UPROPERTY(BlueprintReadWrite,Category="View")

@@ -52,7 +52,7 @@ void AGameMaster::Tick(float DeltaSeconds)
 	Select();
 }
 
-void AGameMaster::SetNextChar()
+void AGameMaster::SetNextChar_Implementation()
 {
 	if (Characters.Num()>0)
 	{

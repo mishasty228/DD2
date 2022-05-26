@@ -18,6 +18,9 @@ struct FAction
 	FString Name = "None";
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	UTexture2D* Thumbnail = nullptr;
+
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	TEnumAsByte<EActionTypes> ActionType = EAT_CloseAttack;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)

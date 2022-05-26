@@ -80,7 +80,7 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetNextChar();
 
 	UFUNCTION(BlueprintCallable)
