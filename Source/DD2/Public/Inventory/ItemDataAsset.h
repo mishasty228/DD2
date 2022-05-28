@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class DD2_API UItemDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
