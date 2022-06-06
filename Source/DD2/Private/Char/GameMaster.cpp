@@ -99,27 +99,11 @@ void AGameMaster::SelectTile()
 	{
 		const int32 index=SelectedTile->TilesStruct.aind;
 		if (index==CurrentCharacter->CurIndex) return;
-        const ATileBase* Tile = Map->FindTileByIndex(index);
-        if (Tile)
-        {
-        	/*if (Tile->TilesStruct.TileType==ETT_Room || Tile->TilesStruct.TileType==ETT_Path ||
-        		Tile->TilesStruct.TileType==ETT_Trap )
-        	{
-        		Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
-        	}
-        	else if (Tile->TilesStruct.TileType==ETT_Chest || Tile->TilesStruct.TileType==ETT_Door ||
-        		Tile->TilesStruct.TileType==ETT_Key || Tile->TilesStruct.TileType==ETT_Portal ||
-        		Tile->TilesStruct.TileType==ETT_Shop)
-        	{
-        		Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index);
-        		Path.RemoveAt(Path.Num()-1);
-        	}*/
-        	Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index, AP);
-        	//Path.RemoveAt(0);
-        	CurrentCharacter->Path = Path;
-        	CurrentCharacter->Move();
-        	//MoveCycle();
-        }
+        Path = Map->FindPathRoute(CurrentCharacter->CurIndex, index, AP);
+        //Path.RemoveAt(0);
+        CurrentCharacter->Path = Path;
+        CurrentCharacter->Move();
+        //MoveCycle();
 	}
 }
 
@@ -197,7 +181,7 @@ void AGameMaster::Select()
 	if (GetWorld()->LineTraceSingleByChannel(Hit, startray, startray+startdir*5000, ECC_GameTraceChannel3, TraceParams ))
 	{
 		ATileBase* HitActor = Cast<ATileBase>(Hit.Actor);
-		if (SelectedTile)
+		if (IsValid(SelectedTile))
 		{
 			if (SelectedTile->TilesStruct.aind!=CurrentCharacter->CurIndex)
 			{
@@ -206,7 +190,7 @@ void AGameMaster::Select()
 			}
 		}
 		ColorAvailable();
-		if (HitActor)
+		if (IsValid(HitActor))
 		{
 			/* (SelectedTile==HitActor)
 			{

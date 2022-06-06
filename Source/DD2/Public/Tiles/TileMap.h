@@ -33,7 +33,7 @@ public:
 	const FVector2D NeighsIndexes[6] = {FVector2D(-1,-1), FVector2D(-1,0), FVector2D(0,1),
 		FVector2D(1,1), FVector2D(1,0), FVector2D(0,-1)};
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	UPROPERTY(BlueprintReadWrite,Category="TileData")
 	TArray<ATileBase*> Tiles;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere, Category="MapData")
@@ -47,10 +47,10 @@ public:
 	//UPROPERTY()
 	//bool bRight = false;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	UPROPERTY(BlueprintReadWrite,Category="TileData")
 	TArray<FRoomStruct> TileRooms;
 	
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
+	UPROPERTY(BlueprintReadWrite,Category="TileData")
     TArray<TEnumAsByte<ETileType>> TileTypes;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
@@ -62,7 +62,7 @@ public:
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="TileData")
 	TArray<TEnumAsByte<ETileType>> TileTypesTempBackup;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	UPROPERTY(BlueprintReadWrite, Category="MapData")
 	TEnumAsByte<EMapTypes> MapType = EMT_Base;
 
 	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
