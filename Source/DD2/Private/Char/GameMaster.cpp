@@ -26,6 +26,15 @@ void AGameMaster::BeginPlay()
 	
 }
 
+void AGameMaster::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+}
+
+void AGameMaster::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+}
 
 
 // Called to bind functionality to input

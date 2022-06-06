@@ -7,14 +7,16 @@
 #include "Living/FAction.h"
 #include "Living/FActionEffect.h"
 #include "GameFramework/Character.h"
-
+#include "AbilitySystemInterface.h"
 #include "LivingBeing.generated.h"
 
 class UNavigationInvokerComponent;
 class ATileMap;
 class ATileBase;
+
+
 UCLASS()
-class DD2_API ALivingBeing : public ACharacter
+class DD2_API ALivingBeing : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 

@@ -12,6 +12,11 @@
 
 
 class ADD2HUD;
+
+class UDD2_GameplayAbility;
+class UDD2_AbilitySystemComponent;
+class UDD2_AttributeSet;
+
 UCLASS()
 class DD2_API AGameMaster : public ACharacter
 {
@@ -75,6 +80,8 @@ protected:
 
 public:	
 
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -116,4 +123,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void ToggleInventory();
+
+
 };
