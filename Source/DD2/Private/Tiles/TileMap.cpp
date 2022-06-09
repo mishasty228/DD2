@@ -765,7 +765,7 @@ void ATileMap::FindOptionalCorridors()
 				}
 			}
 			//Directions 2 and 5 WORKS CORRECTLY
-			else if ((A.start+(A.size-1)).X == (B.start+(B.size-1)).X)
+			if ((A.start+(A.size-1)).X == (B.start+(B.size-1)).X)
 			{
 				int32 len = res.Size();
 
@@ -781,7 +781,7 @@ void ATileMap::FindOptionalCorridors()
 				}
 			}
 			//Directions 1 and 4 WORKS CORRECTLY
-			else if ((A.start+(A.size-1)).Y == (B.start+(B.size-1)).Y)
+			if ((A.start+(A.size-1)).Y == (B.start+(B.size-1)).Y)
 			{
 				int32 len = res.Size();
 
@@ -844,7 +844,7 @@ void ATileMap::RoomCorCycle()
 		chestCount = 0;
 		roomToSpawn = 0;
 		prevLocation = FVector2D(worldSize/2);
-		chestAmount = RandomOdd(1,2);
+		chestAmount = RandomOdd(1,chestMax);
 		keyAmount = chestAmount;
 		TileTypesTemp.Empty();
 		TileRooms.Empty();

@@ -115,9 +115,7 @@ bool ATileBase::CharInteraction_Implementation(ACharBase* Char)
 			Char->CurIndex= this->TilesStruct.aind;
 			return true;
 		}
-		else
      	return false;
-     	break;
 	case ETT_Path:
 	case ETT_Room:
 	case ETT_Spawn:
@@ -125,10 +123,8 @@ bool ATileBase::CharInteraction_Implementation(ACharBase* Char)
 	case ETT_Trap:
 		Char->CurIndex= this->TilesStruct.aind;
 		return true;
-		break;
 	default:
 		return false;
-		break;
 	}
 }
 

@@ -142,6 +142,9 @@ public:
 	int32 despawnCount = 1;
 
 	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 chestMax = 2;
+
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 chestAmount = 0;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")

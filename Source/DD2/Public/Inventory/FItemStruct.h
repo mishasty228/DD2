@@ -41,6 +41,9 @@ struct FItemStruct
 	UPROPERTY(BlueprintReadWrite,EditAnywhere)
 	int32 Amount = 1;
 
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	TSubclassOf<UItemDataAsset> Item;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	USkeletalMesh* ArmorMesh;
 
