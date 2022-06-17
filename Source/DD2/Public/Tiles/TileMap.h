@@ -8,6 +8,7 @@
 #include "TileRoom.h"
 #include "GameFramework/Actor.h"
 #include "Math/RandomStream.h"
+#include "Http.h"
 #include "Kismet/GameplayStatics.h"
 #include "TileMap.generated.h"
 
@@ -254,6 +255,9 @@ public:
     UFUNCTION(BlueprintCallable)
     void FinishRoomCorners();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void IniConfig();
+
     UFUNCTION(BlueprintCallable)
     void DoOptionalCorridors(int32 start, int32 end, int32 dir);
 
@@ -292,4 +296,5 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectionSuccessfully);
 };

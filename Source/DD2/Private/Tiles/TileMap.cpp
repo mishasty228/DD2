@@ -949,6 +949,8 @@ void ATileMap::FinishRoomCorners()
 	}
 }
 
+
+
 void ATileMap::DoOptionalCorridors(int32 start, int32 end, int32 dir)
 {
 	TArray<int32> walls;
@@ -996,5 +998,18 @@ void ATileMap::BeginPlay()
 		UE_LOG(LogTemp, Display, TEXT("Found Map"));
 	}
 
+}
+
+void ATileMap::IniConfig_Implementation()
+{
+	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+	Request->OnProcessRequestComplete().BindUObject(this, &ATileMap::OnResponseReceived);
+	Request->SetURL("");
+	
+}
+
+void ATileMap::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectionSuccessfully)
+{
+	
 }
 
