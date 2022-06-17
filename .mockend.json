@@ -1,5 +1,5 @@
 {
-    "MapConfig": {
+    "Post": {
       "MapSize": { "int": { "min": 125, "max":125} },
       "RoomsAmount": { "int": { "min": 11, "max":11} },
       "RoomsSizeMin": { "int": { "min": 5, "max":5} },
