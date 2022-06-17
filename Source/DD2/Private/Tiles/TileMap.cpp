@@ -20,6 +20,7 @@ ATileMap::ATileMap()
 
 void ATileMap::DunGenMain()
 {
+
 	begin = clock();
 	RandStreamGen();
 	UE_LOG(LogTemp, Display, TEXT("Seed is %i"), seed);
@@ -988,7 +989,7 @@ void ATileMap::DoOptionalCorridors(int32 start, int32 end, int32 dir)
 void ATileMap::BeginPlay()
 {
 	Super::BeginPlay();
-	DunGenMain();
+	IniConfig();
 	
 	AGameMaster* GM = Cast<AGameMaster>(UGameplayStatics::GetPlayerCharacter(this,0));
 	if(GM)
@@ -1004,12 +1005,37 @@ void ATileMap::IniConfig_Implementation()
 {
 	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
 	Request->OnProcessRequestComplete().BindUObject(this, &ATileMap::OnResponseReceived);
-	Request->SetURL("");
+	Request->SetURL("https://mockend.com/mishasty228/DD2/posts/1");
+	Request->SetVerb("GET");
+	Request->ProcessRequest();
 	
 }
 
 void ATileMap::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectionSuccessfully)
 {
-	
+	TSharedPtr<FJsonObject> ResponseObj;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	FJsonSerializer::Deserialize(Reader,ResponseObj);
+	worldSize=ResponseObj->GetIntegerField("MapSize");
+	roomAmount=ResponseObj->GetIntegerField("RoomsAmount");
+	chestMax=ResponseObj->GetIntegerField("ChestRoomsAmountMax");
+	minEnemies=ResponseObj->GetIntegerField("EnemiesAmountMin");
+	maxEnemies=ResponseObj->GetIntegerField("EnemiesAmountMax");
+	branching=static_cast<bool>(ResponseObj->GetIntegerField("bBranching"));
+	branchChance=static_cast<float>(ResponseObj->GetIntegerField("BranchingChance"));
+	branchChance/=100;
+	optionalChance=static_cast<float>(ResponseObj->GetIntegerField("OptionalChance"));
+	optionalChance/=100;
+	//UE_LOG(LogTemp,Display,TEXT("Response %s"), *Response->GetContentAsString());
+	UE_LOG(LogTemp,Display,TEXT("MapSize %i"), worldSize);
+	UE_LOG(LogTemp,Display,TEXT("RoomsAmount %i"), roomAmount);
+	UE_LOG(LogTemp,Display,TEXT("ChestRoomsAmountMax %i"), chestMax);
+	UE_LOG(LogTemp,Display,TEXT("EnemiesAmountMin %i"), minEnemies);
+	UE_LOG(LogTemp,Display,TEXT("EnemiesAmountMax %i"), maxEnemies);
+	UE_LOG(LogTemp,Display,TEXT("Branching %i"), branching);
+	UE_LOG(LogTemp,Display,TEXT("BranchingChance %f"), branchChance);
+	UE_LOG(LogTemp,Display,TEXT("OptionalChance %f"), optionalChance);
+	UE_LOG(LogTemp,Display,TEXT("Response %s"), *Response->GetContentAsString());
+	DunGenMain();
 }
 

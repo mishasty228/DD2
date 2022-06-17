@@ -1,7 +1,9 @@
 {
-    "Post": {
+    "MapConfig": {
       "MapSize": { "int": { "min": 125, "max":125} },
       "RoomsAmount": { "int": { "min": 11, "max":11} },
+      "RoomsSizeMin": { "int": { "min": 5, "max":5} },
+      "RoomsSizeMax": { "int": { "min": 9, "max":9} },
       "ChestRoomsAmountMax": { "int": { "min": 2, "max":2} },
       "EnemiesAmountMin": { "int": { "min": 2, "max":2} },
       "EnemiesAmountMax": { "int": { "min": 4, "max":4} },

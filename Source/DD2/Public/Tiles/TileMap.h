@@ -9,6 +9,7 @@
 #include "GameFramework/Actor.h"
 #include "Math/RandomStream.h"
 #include "Http.h"
+#include "Json.h"
 #include "Kismet/GameplayStatics.h"
 #include "TileMap.generated.h"
 
