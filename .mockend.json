@@ -1,14 +1,12 @@
 {
     "Post": {
-      "title": { "string": {} },
-      "comments": {
-        "hasMany": "Comment"
-      }
-    },
-    "Comment": {
-      "body": { "string": {} },
-      "post": {
-        "belongsTo": "Post"
-      }
+      "MapSize": { "int": { "min": 100, "max":125} },
+      "RoomsAmount": { "int": { "min": 8, "max":12} },
+      "ChestRoomsAmountMax": { "int": { "min": 0, "max":2} },
+      "EnemiesAmountMin": { "int": { "min": 1, "max":3} },
+      "EnemiesAmountMax": { "int": { "min": 3, "max":5} },
+      "bBranching": { "boolean": {} },
+      "BranchingChance": { "int": { "min": 50, "max":85} },
+      "OptionalChance": { "int": { "min": 50, "max":80} }
     }
   }
