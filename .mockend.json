@@ -1,12 +1,12 @@
 {
     "Post": {
-    "MapSize": { "int": 125 },
-    "RoomsAmount": { "int": 10} ,
-    "ChestRoomsAmountMax": { "int": 2},
-    "EnemiesAmountMin": { "int": 2 },
-    "EnemiesAmountMax": { "int": 4 },
-    "bBranching": { "boolean": true },
-    "BranchingChance": { "int": 66 },
-    "OptionalChance": { "int": 66 } 
+      "MapSize": { "int": { "min": 125, "max":125} },
+      "RoomsAmount": { "int": { "min": 11, "max":11} },
+      "ChestRoomsAmountMax": { "int": { "min": 2, "max":2} },
+      "EnemiesAmountMin": { "int": { "min": 2, "max":2} },
+      "EnemiesAmountMax": { "int": { "min": 4, "max":4} },
+      "bBranching": { "boolean": true },
+      "BranchingChance": { "int": { "min": 66, "max":66} },
+      "OptionalChance": { "int": { "min": 70, "max":70} }
     }
-}
+  }
