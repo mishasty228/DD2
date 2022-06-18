@@ -633,7 +633,7 @@ bool ATileMap::GenerateCorridor(int32 size)
 	
 	int32 dir = direction; //RandomOdd(0, TileRooms[startRoom].cornerInd.Num()-1);
 	
-	FVector2D startpoint = IndexToCoord(TileRooms[startRoom].cornerInd[dir]);
+	FVector2D startpoint = IndexToCoord(TileRooms[ClampInt(startRoom,0,TileRooms.Num()-1)].cornerInd[dir]);
 	
 	TArray<int32> walls;
 	for(int32 i = 1; i <= 2; i++)
@@ -1013,29 +1013,34 @@ void ATileMap::IniConfig_Implementation()
 
 void ATileMap::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectionSuccessfully)
 {
-	TSharedPtr<FJsonObject> ResponseObj;
-	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-	FJsonSerializer::Deserialize(Reader,ResponseObj);
-	worldSize=ResponseObj->GetIntegerField("MapSize");
-	roomAmount=ResponseObj->GetIntegerField("RoomsAmount");
-	chestMax=ResponseObj->GetIntegerField("ChestRoomsAmountMax");
-	minEnemies=ResponseObj->GetIntegerField("EnemiesAmountMin");
-	maxEnemies=ResponseObj->GetIntegerField("EnemiesAmountMax");
-	branching=static_cast<bool>(ResponseObj->GetIntegerField("bBranching"));
-	branchChance=static_cast<float>(ResponseObj->GetIntegerField("BranchingChance"));
-	branchChance/=100;
-	optionalChance=static_cast<float>(ResponseObj->GetIntegerField("OptionalChance"));
-	optionalChance/=100;
-	//UE_LOG(LogTemp,Display,TEXT("Response %s"), *Response->GetContentAsString());
-	UE_LOG(LogTemp,Display,TEXT("MapSize %i"), worldSize);
-	UE_LOG(LogTemp,Display,TEXT("RoomsAmount %i"), roomAmount);
-	UE_LOG(LogTemp,Display,TEXT("ChestRoomsAmountMax %i"), chestMax);
-	UE_LOG(LogTemp,Display,TEXT("EnemiesAmountMin %i"), minEnemies);
-	UE_LOG(LogTemp,Display,TEXT("EnemiesAmountMax %i"), maxEnemies);
-	UE_LOG(LogTemp,Display,TEXT("Branching %i"), branching);
-	UE_LOG(LogTemp,Display,TEXT("BranchingChance %f"), branchChance);
-	UE_LOG(LogTemp,Display,TEXT("OptionalChance %f"), optionalChance);
-	UE_LOG(LogTemp,Display,TEXT("Response %s"), *Response->GetContentAsString());
+	if (bConnectionSuccessfully)
+	{
+		TSharedPtr<FJsonObject> ResponseObj;
+        TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+        FJsonSerializer::Deserialize(Reader,ResponseObj);
+        worldSize=ResponseObj->GetIntegerField("MapSize");
+        roomAmount=ResponseObj->GetIntegerField("RoomsAmount");
+        minRoomSize=ResponseObj->GetIntegerField("RoomsSizeMin");
+        maxRoomSize=ResponseObj->GetIntegerField("RoomsSizeMax");
+        chestMax=ResponseObj->GetIntegerField("ChestRoomsAmountMax");
+        minEnemies=ResponseObj->GetIntegerField("EnemiesAmountMin");
+        maxEnemies=ResponseObj->GetIntegerField("EnemiesAmountMax");
+        branching=static_cast<bool>(ResponseObj->GetIntegerField("bBranching"));
+        branchChance=static_cast<float>(ResponseObj->GetIntegerField("BranchingChance"));
+        branchChance/=100;
+        optionalChance=static_cast<float>(ResponseObj->GetIntegerField("OptionalChance"));
+        optionalChance/=100;
+        //UE_LOG(LogTemp,Display,TEXT("Response %s"), *Response->GetContentAsString());
+        UE_LOG(LogTemp,Display,TEXT("MapSize %i"), worldSize);
+        UE_LOG(LogTemp,Display,TEXT("RoomsAmount %i"), roomAmount);
+        UE_LOG(LogTemp,Display,TEXT("ChestRoomsAmountMax %i"), chestMax);
+        UE_LOG(LogTemp,Display,TEXT("EnemiesAmountMin %i"), minEnemies);
+        UE_LOG(LogTemp,Display,TEXT("EnemiesAmountMax %i"), maxEnemies);
+        UE_LOG(LogTemp,Display,TEXT("Branching %i"), branching);
+        UE_LOG(LogTemp,Display,TEXT("BranchingChance %f"), branchChance);
+        UE_LOG(LogTemp,Display,TEXT("OptionalChance %f"), optionalChance);
+        UE_LOG(LogTemp,Display,TEXT("Response %s"), *Response->GetContentAsString());
+	}
 	DunGenMain();
 }
 

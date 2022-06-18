@@ -15,3 +15,15 @@ enum EMapTypes
  EMT_Lava UMETA(DisplayName = "LavaDungeon")
 };
 
+inline int32 ClampInt(int32 value, int32 min, int32 max)
+{
+ if (min>max)
+ {
+  int32 tmp = min;
+  min = max;
+  max = tmp;
+ }
+ if (value < min) return min;
+ if (value > max) return max;
+ return value;
+}
