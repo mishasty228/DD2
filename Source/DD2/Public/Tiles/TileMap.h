@@ -68,6 +68,9 @@ public:
 	TEnumAsByte<EMapTypes> MapType = EMT_Base;
 
 	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
+	bool bNeedConfig = true;;
+
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 minRoomSize = 3;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere)

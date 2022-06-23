@@ -933,7 +933,7 @@ void ATileMap::RoomCorCycle()
 		//TempArraysSetup();
 		GenerateAllIndexes();
 		RandStreamGen();
-		UE_LOG(LogTemp,Error, TEXT("Trying to generate another map with seed %d"), seed);
+		UE_LOG(LogTemp,Error, TEXT("Trying to generate another map with seed %i"), seed);
 		
 	}
 }
@@ -1003,12 +1003,15 @@ void ATileMap::BeginPlay()
 
 void ATileMap::IniConfig_Implementation()
 {
-	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
-	Request->OnProcessRequestComplete().BindUObject(this, &ATileMap::OnResponseReceived);
-	Request->SetURL("https://mockend.com/mishasty228/DD2/posts/1");
-	Request->SetVerb("GET");
-	Request->ProcessRequest();
-	
+	if (bNeedConfig)
+	{
+		FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+        Request->OnProcessRequestComplete().BindUObject(this, &ATileMap::OnResponseReceived);
+        Request->SetURL("https://mockend.com/mishasty228/DD2/posts/1");
+        Request->SetVerb("GET");
+        Request->ProcessRequest();
+	}
+	else DunGenMain();
 }
 
 void ATileMap::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectionSuccessfully)
@@ -1016,8 +1019,13 @@ void ATileMap::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Resp
 	if (bConnectionSuccessfully)
 	{
 		TSharedPtr<FJsonObject> ResponseObj;
-        TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+		const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
         FJsonSerializer::Deserialize(Reader,ResponseObj);
+		if (!ResponseObj)
+		{
+			DunGenMain();
+			return;
+		}
         worldSize=ResponseObj->GetIntegerField("MapSize");
         roomAmount=ResponseObj->GetIntegerField("RoomsAmount");
         minRoomSize=ResponseObj->GetIntegerField("RoomsSizeMin");
