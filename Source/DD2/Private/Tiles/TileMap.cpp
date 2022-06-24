@@ -272,10 +272,13 @@ ATileBase* ATileMap::FindTileByIndex(int32 index)
 	ATileBase* IndexedTile = nullptr;
 	for (ATileBase* Tile : Tiles)
 	{
-		if (Tile->TilesStruct.aind == index)
+		if (Tiles.Num()>0)
 		{
-			IndexedTile = Tile;
-			break;
+			if (Tile->TilesStruct.aind == index)
+            {
+            	IndexedTile = Tile;
+            	break;
+            }
 		}
 	}
 	return IndexedTile;
@@ -546,20 +549,18 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 	else
 	{
 #pragma region FillRooms
-		for(int32 i = 0; i<RandomOdd(1,size-2);i++)
-		{
-			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-			TileTypesTemp[selIndex]=ETT_Block;
-			TempRoom.WayTilesArray.Remove(selIndex);
-		}
+		
 		switch(TempRoom.RoomType)
 		{
 		case ERT_SpawnRoom:
-			for(int32 i = 0; i<2;i++)
+			for(int32 i = 0; i<charsInSpawnRoom;i++)
 			{
-				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-				TileTypesTemp[selIndex]=ETT_Spawn;
-				TempRoom.WayTilesArray.Remove(selIndex);
+				if (TempRoom.WayTilesArray.Num()>0)
+				{
+					selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+                    TileTypesTemp[selIndex]=ETT_Spawn;
+                    TempRoom.WayTilesArray.Remove(selIndex);
+				}
 			}
 			spawnCount++;
 			spawned = true;
@@ -574,28 +575,40 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 		case ERT_EnemyRoom:
 			for (int32 i = 0; i < TempRoom.Enemies; i++)
 			{
-				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-				TileTypesTemp[selIndex] = ETT_EnemySpawn;
-				TempRoom.WayTilesArray.Remove(selIndex);
+				if (TempRoom.WayTilesArray.Num()>0)
+				{
+					selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+                    TileTypesTemp[selIndex] = ETT_EnemySpawn;
+                    TempRoom.WayTilesArray.Remove(selIndex);
+				}
 			}
 			break;
 		case ERT_ChestRoom:
-			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-			TileTypesTemp[selIndex]=ETT_Chest;
-			TempRoom.WayTilesArray.Remove(selIndex);
-			CurRoomType = ERT_KeyRoom;
-			chestCount++;
-			TileTypesTemp[TempRoom.cornerInd[(direction+3)%6]] = ETT_Door;
-			break;
-		case ERT_KeyRoom:
-			selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-			TileTypesTemp[selIndex]=ETT_Key;
-			TempRoom.WayTilesArray.Remove(selIndex);
-			for (int32 i = 0; i < TempRoom.Enemies; i++)
+			if (TempRoom.WayTilesArray.Num()>0)
 			{
 				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
-				TileTypesTemp[selIndex] = ETT_EnemySpawn;
+				TileTypesTemp[selIndex]=ETT_Chest;
 				TempRoom.WayTilesArray.Remove(selIndex);
+				CurRoomType = ERT_KeyRoom;
+				chestCount++;
+				TileTypesTemp[TempRoom.cornerInd[(direction+3)%6]] = ETT_Door;
+			}
+			break;
+		case ERT_KeyRoom:
+			if (TempRoom.WayTilesArray.Num()>0)
+			{
+				selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+				TileTypesTemp[selIndex]=ETT_Key;
+				TempRoom.WayTilesArray.Remove(selIndex);
+			}
+			for (int32 i = 0; i < TempRoom.Enemies; i++)
+			{
+				if (TempRoom.WayTilesArray.Num()>0)
+				{
+					selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+					TileTypesTemp[selIndex] = ETT_EnemySpawn;
+					TempRoom.WayTilesArray.Remove(selIndex);
+				}
 			}
 			keyCount++;
 			CurRoomType = ERT_Base;
@@ -610,7 +623,15 @@ bool ATileMap::GenerateRoom(int32 roomnum, int32 size, TEnumAsByte<ERoomTypes> R
 		default:
 			break;
 		}
-		
+		for(int32 i = 0; i<RandomOdd(1,size-2);i++)
+        {
+        	if (TempRoom.WayTilesArray.Num()>0)
+        	{
+        		selIndex = TempRoom.WayTilesArray[RandomOdd(0,TempRoom.WayTilesArray.Num()-1)];
+        		TileTypesTemp[selIndex]=ETT_Block;
+        		TempRoom.WayTilesArray.Remove(selIndex);
+        	}
+        }
 	if (TempRoom.RoomType!=ERT_ChestRoom && TempRoom.RoomType!=ERT_ShopRoom) TileRooms.Add(TempRoom);
 	direction = RandomOdd(0,TempRoom.cornerInd.Num()-1);
 #pragma endregion	
@@ -942,10 +963,13 @@ void ATileMap::FinishRoomCorners()
 {
 	for (FRoomStruct Room : TileRooms)
 	{
-		for (int32 i = 0; i < Room.cornerInd.Num();i++)
+		if (TileRooms.Num()>0)
 		{
-			int32 Ind_To_Check=CoordToIndex(IndexToCoord(Room.cornerInd[i])+NeighsIndexes[i]);
-			if (TileTypes[Ind_To_Check]==ETT_Path) TileTypes[Room.cornerInd[i]]=ETT_Door;
+			for (int32 i = 0; i < Room.cornerInd.Num();i++)
+            {
+            	int32 Ind_To_Check=CoordToIndex(IndexToCoord(Room.cornerInd[i])+NeighsIndexes[i]);
+            	if (TileTypes[Ind_To_Check]==ETT_Path) TileTypes[Room.cornerInd[i]]=ETT_Door;
+            }
 		}
 	}
 }

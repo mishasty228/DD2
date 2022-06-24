@@ -74,7 +74,7 @@ public:
 	int32 minRoomSize = 3;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	int32 minRoomSizeDefault = 3;
+	int32 minRoomSizeDefault = 2;
 	
 	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 maxRoomSize = 5;
@@ -137,6 +137,9 @@ public:
 	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 spawnAmount = 4;
 
+	UPROPERTY(Config, BlueprintReadWrite,EditAnywhere,Category="MapData")
+	int32 charsInSpawnRoom = 2;
+
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 spawnCount = 4;
 
@@ -155,7 +158,7 @@ public:
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 chestCount = 0;
 
-	UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
+	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
 	int32 keyAmount = 0;
 
 	//UPROPERTY(BlueprintReadWrite,EditAnywhere,Category="MapData")
